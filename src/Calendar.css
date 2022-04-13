@@ -1,0 +1,17 @@
+td {
+    width: 20px;
+    height: 20px;
+    border-color: black;
+    border-style: dotted;
+   
+
+}
+
+table {
+    border-collapse: collapse;
+
+}
+
+.calendar-cell-true {
+    background-color: blueviolet;
+}
