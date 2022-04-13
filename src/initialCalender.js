@@ -1,5 +1,5 @@
 
-function weekShift (date) {
+export function weekShift (date) {
     const monthStart = new Date (date.getFullYear(), date.getMonth(), 1);
     return (monthStart.getDay() + 6)%7;
 } 

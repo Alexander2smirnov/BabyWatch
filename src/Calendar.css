@@ -1,8 +1,11 @@
 td {
-    width: 20px;
-    height: 20px;
-    border-color: black;
-    border-style: dotted;
+    width: 40px;
+    height: 40px;
+    border-color: rgb(126, 125, 125);
+    border-style: solid;
+    border-width: 1px;
+    box-sizing: border-box;
+    
    
 
 }
@@ -12,6 +15,14 @@ table {
 
 }
 
-.calendar-cell-true {
-    background-color: blueviolet;
+.calendar-cell-has-events-true {
+    background-color: rgb(135, 247, 193);
+}
+
+.calendar-selected-true {
+    border-style:solid;
+    border-color: black;
+    box-sizing: border-box;
+    outline: 2px solid green;
+    outline-offset: -1px;
 }
