@@ -1,7 +1,7 @@
 import React, { useState }  from 'react';
 
 
-export default function DayBreakdown ({data, year, month, day, addEvent}) {
+export default function DayBreakdown ({data, year, month, day, addEvent, deleteEvent}) {
     const [inputTitle, setInputTitle] = useState('');
 
     function keyUp(event) {
@@ -29,8 +29,14 @@ export default function DayBreakdown ({data, year, month, day, addEvent}) {
        {!!current.length && <h4>Current tasks:</h4>}
         {current.map(obj => 
         <div key={obj.title}>   
-            {obj.timeStart}, {obj.timeEnd}, {obj.title}
+            {obj.timeStart}, {obj.timeEnd}, {obj.title} 
+            <button
+                onClick={() => deleteEvent(obj.id)}
+            >Delete</button>
         </div>)}
     </div>
 
 }
+
+
+
