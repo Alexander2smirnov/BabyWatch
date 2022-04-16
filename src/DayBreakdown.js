@@ -1,8 +1,11 @@
-import React, { useState }  from 'react';
+import React, { useContext, useState }  from 'react';
+import UserContext from './userContext';
 
 
 export default function DayBreakdown ({data, year, month, day, addEvent, deleteEvent}) {
     const [inputTitle, setInputTitle] = useState('');
+    const user = useContext(UserContext);
+    
 
     function keyUp(event) {
         // console.log(event.key);
@@ -15,6 +18,7 @@ export default function DayBreakdown ({data, year, month, day, addEvent, deleteE
 
     }
     const current = data.filter(obj => obj.month === month && obj.day === day && obj.year == year);
+    
     
     return <div>
         <h2>{year} {month} {day} </h2>
@@ -29,10 +33,11 @@ export default function DayBreakdown ({data, year, month, day, addEvent, deleteE
        {!!current.length && <h4>Current tasks:</h4>}
         {current.map(obj => 
         <div key={obj.title}>   
-            {obj.timeStart}, {obj.timeEnd}, {obj.title} 
+            {obj.timeStart}, {obj.timeEnd}, {obj.title} {'created by ' + obj.creatorName} 
+            {user.uid === obj.creatorId && 
             <button
                 onClick={() => deleteEvent(obj.id)}
-            >Delete</button>
+            >Delete</button>}
         </div>)}
     </div>
 

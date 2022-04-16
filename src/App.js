@@ -9,7 +9,7 @@ import {auth} from './firebaseCustom.js';
 import {onAuthStateChanged} from "firebase/auth";
 import UserContext from './userContext';
 import { doc, setDoc } from 'firebase/firestore';
-import { users } from './firebaseCustom.js';
+import { users, families } from './firebaseCustom.js';
 
 
 
@@ -30,17 +30,24 @@ function App() {
 
   return (
     <div className="App">
-      <UserContext.Provider value={user}>
-      <header className="App-header">
+      <Router>
+        <UserContext.Provider value={user}>
+          <header className="App-header">
 
-        <Nav/>
-      </header>
-      {user ? <CalendarPage /> : <Welcome />}
-     
+            <Nav/>
+          </header>
+          {!user ? <Welcome /> : 
+          
+            <Routes>
+              
+              <Route path='/' element={<FamiliesList/>}/>
+              <Route path='/family/:familyId' element={<CalendarPage />}/>
+            </Routes>}
 
-      </UserContext.Provider>   
-      <footer>
-      </footer>
+        </UserContext.Provider>   
+        <footer>
+        </footer>
+      </Router>
     </div>
   );
 }

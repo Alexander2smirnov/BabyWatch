@@ -1,20 +1,29 @@
 import React from 'react';
 import DayBreakdown from './DayBreakdown';
 import EventDisplay from './EventDisplay';
-import {BrowserRouter as Router, Routes, Route, Link} from 'react-router-dom'
+import {BrowserRouter as Router, Routes, Route, Link, useNavigate} from 'react-router-dom'
 import { useEffect , useState, useContext} from 'react';
 import CalendarDraw from './CalendarDraw';
 import './Calendar.css'
-import { addDoc, getDocs, where, query, deleteDoc, doc} from "firebase/firestore";
+import { addDoc, getDocs, where, query, deleteDoc, doc, getDoc, updateDoc, arrayUnion} from "firebase/firestore";
 import { events } from './firebaseCustom';
 import { families, users } from './firebaseCustom';
 import UserContext from './userContext';
+import { useParams } from 'react-router-dom';
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 
-export default function CalendarPage () {
-    const user = useContext (UserContext);
+export default function CalendarPage() {
+    const params = useParams();
+    const navigate = useNavigate();
+
+    const user = useContext(UserContext);
+    const [familyUsers, setFamilyUsers] = useState([]);
+    const [familyName, setFamilyName] = useState('');
+    const [inputNewMember, setInputNewMember] = useState ('');
+    const [inputNewMemberError, setInputNewMemberError] = useState(null);
+    
     const [data, setData] = useState([]);
     const [showDay, setShowDay] = useState(null);
     const [date, setDate] = useState(new Date());
@@ -24,21 +33,44 @@ export default function CalendarPage () {
     const year = date.getFullYear();
 
 
-    useEffect (() => { getEvents(); },[month])
+    useEffect (() => { 
+        getEvents(); 
+        getFamily();
+    },[month, year, params.familyId])
+
 
     
     async function getEvents() {
-    
-        const q = query (events, where('userId', '==', user.uid), where ('month', '==', month), where('year', '==', year))
+        const q = query (events, 
+            where('familyId', '==', params.familyId), 
+            where('month', '==', month), 
+            where('year', '==', year))
         const querySnapshot = await getDocs(q);       
-        setData (querySnapshot.docs.map((doc) => ({id: doc.id, ...doc.data()})));
+        setData(await Promise.all(querySnapshot.docs.map(async (docSnapshot) => {
+            const eventData = docSnapshot.data();
+            return {
+                id: docSnapshot.id, 
+                ...eventData, 
+                creatorName: !eventData.creator ? null : (await getDoc(eventData.creator)).data().name,
+                creatorId: eventData.creator?.id,
+                
+            }
+        })));
     }
 
-    async function getFamilies() {
-        const q = query (families, where('user', '==', user.uid))
-        const querySnapshot = await getDocs(q);       
+    async function getFamily() {
+        const querySnapshot = await getDoc(doc(families, params.familyId));
+        setFamilyName(querySnapshot.data().name);
+        const familyRefs = querySnapshot.data().users;
+        setFamilyUsers(await Promise.all(familyRefs.map(async (userRef) => {
+            const userData = (await getDoc(userRef)).data();
+            return {name: userData.name, email: userData.email};
+
+        })));
+
         
     }
+
 
     function monthChange (num) {
         const newDate = new Date(date.getTime());
@@ -49,7 +81,7 @@ export default function CalendarPage () {
         
     function cellClickHandler (year, month, day) {
         
-        setShowDay({year, month, day})
+        setShowDay({year, month, day});
     }    
 
 
@@ -57,7 +89,8 @@ export default function CalendarPage () {
     async function addEvent (year, month, day, timeStart, timeEnd, title) {
         
         const newEvent = {
-            userId:user.uid,
+            familyId: params.familyId,
+            creator: doc(users, user.uid),
             year,
             month,
             day,
@@ -87,8 +120,37 @@ export default function CalendarPage () {
         getEvents();
     }
 
+    function keyUpHandler (event) {
+        if (event.key === 'Enter') {
+            addNewFamilyMember(inputNewMember);
+            setInputNewMember('')
+        }
+    }
+
+    async function addNewFamilyMember (str) {
+        console.log(str)
+        const email = str.trim();
+        const q = query (users, where('email', '==', email)); 
+           
+        const userSnapshot = await getDocs(q);
+        if (!userSnapshot.docs.length) setInputNewMemberError('E-mail not found, try again pls');
+        else {
+            setInputNewMemberError(null);
+            const newMemberRef = userSnapshot.docs[0].ref;
+
+            console.log(newMemberRef);
+
+            try {
+                await updateDoc(doc(families, params.familyId), {users: arrayUnion(newMemberRef)});
+                getFamily();
+            }catch {
+                console.log('error updating family')
+            }
+
+        }
 
 
+    }
 
   
  
@@ -102,31 +164,53 @@ export default function CalendarPage () {
             Next{'>>'}
         </button>
         <br/>
-        
+        <div>Family: {familyName}
+            <ul>
+                {familyUsers.map(user => (
+                    <li key={user.name + user.email}>
+                        {user.name}, {user.email}
+
+                    </li>
+                ))}
+
+            </ul>
+        </div>
+        <input 
+            type='text'
+            placeholder={'New family member'}
+            onChange={(event) => {setInputNewMember(event.target.value)}}
+            onKeyUp={keyUpHandler}
+            value={inputNewMember}
+        >
+
+        </input>
+        {inputNewMemberError}
+                    <br/>
         <button 
-            
+            onClick={() => navigate('/')}
+               
         >
             To families
         </button>
-
+        
         <h1> {year} {month} </h1>
                
              
         <CalendarDraw
-        data={data}
-        clickHandler={cellClickHandler}
-        shiftDate={date}
-        showDay={showDay?.day}
+            data={data}
+            clickHandler={cellClickHandler}
+            shiftDate={date}
+            showDay={showDay?.day}
         />
    
         {showDay ? <DayBreakdown 
-        data={data}
-        day={showDay.day}
-        month={month}
-        year={year}
-        addEvent={addEvent}
-        deleteEvent={deleteEvent}
-             /> : null}
+            data={data}
+            day={showDay.day}
+            month={month}
+            year={year}
+            addEvent={addEvent}
+            deleteEvent={deleteEvent}
+        /> : null}
 
     </div>
 
