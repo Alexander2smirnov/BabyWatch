@@ -5,11 +5,12 @@ import {BrowserRouter as Router, Routes, Route, Link, useNavigate} from 'react-r
 import { useEffect , useState, useContext} from 'react';
 import CalendarDraw from './CalendarDraw';
 import './Calendar.css'
-import { addDoc, getDocs, where, query, deleteDoc, doc, getDoc, updateDoc, arrayUnion} from "firebase/firestore";
+import { addDoc, getDocs, where, query, deleteDoc, doc, getDoc, updateDoc, arrayUnion, setDoc, arrayRemove} from "firebase/firestore";
 import { events } from './firebaseCustom';
 import { families, users } from './firebaseCustom';
 import UserContext from './userContext';
 import { useParams } from 'react-router-dom';
+import { async } from '@firebase/util';
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -19,7 +20,9 @@ export default function CalendarPage() {
     const navigate = useNavigate();
 
     const user = useContext(UserContext);
-    const [familyUsers, setFamilyUsers] = useState([]);
+    
+    const [familyMembers, setFamilyMembers] = useState([]);
+    const [familyAdminId, setFamilyAdminId] = useState();
     const [familyName, setFamilyName] = useState('');
     const [inputNewMember, setInputNewMember] = useState ('');
     const [inputNewMemberError, setInputNewMemberError] = useState(null);
@@ -53,6 +56,9 @@ export default function CalendarPage() {
                 ...eventData, 
                 creatorName: !eventData.creator ? null : (await getDoc(eventData.creator)).data().name,
                 creatorId: eventData.creator?.id,
+                signedByName: !eventData.signedBy ? null : (await getDoc(eventData.signedBy)).data().name,
+                signedById: eventData.signedBy?.id,
+                
                 
             }
         })));
@@ -61,10 +67,11 @@ export default function CalendarPage() {
     async function getFamily() {
         const querySnapshot = await getDoc(doc(families, params.familyId));
         setFamilyName(querySnapshot.data().name);
+        setFamilyAdminId(querySnapshot.data().admin.id);
         const familyRefs = querySnapshot.data().users;
-        setFamilyUsers(await Promise.all(familyRefs.map(async (userRef) => {
+        setFamilyMembers(await Promise.all(familyRefs.map(async (userRef) => {
             const userData = (await getDoc(userRef)).data();
-            return {name: userData.name, email: userData.email};
+            return {name: userData.name, email: userData.email, id: userRef.id};
 
         })));
 
@@ -97,6 +104,7 @@ export default function CalendarPage() {
             timeStart,
             timeEnd,
             title,
+            signedBy: null,
         };
         
         try {
@@ -108,6 +116,18 @@ export default function CalendarPage() {
         getEvents();
 
         //setData(newData);
+    }
+
+    async function changeEvent (id, timeStart, timeEnd, title) {
+        try { 
+            if (title) await setDoc(doc(events, id), {title}, {merge:true});
+            if (timeStart) await setDoc(doc(events, id), {timeStart}, {merge:true});
+            if (timeEnd) await setDoc(doc(events, id), {timeEnd}, {merge:true});
+        } catch (e) {
+            console.error("Error changing event: ", e);
+        }
+       
+        getEvents();
     }
 
     async function deleteEvent (id) {
@@ -123,12 +143,11 @@ export default function CalendarPage() {
     function keyUpHandler (event) {
         if (event.key === 'Enter') {
             addNewFamilyMember(inputNewMember);
-            setInputNewMember('')
+            setInputNewMember('');
         }
     }
 
     async function addNewFamilyMember (str) {
-        console.log(str)
         const email = str.trim();
         const q = query (users, where('email', '==', email)); 
            
@@ -152,9 +171,79 @@ export default function CalendarPage() {
 
     }
 
+    async function removeFamilyMember (member) {
+      
+        const memberRef = (await getDoc(doc(users, member.id))).ref;
+        await updateDoc(doc(families, params.familyId), {users: arrayRemove(memberRef)});
+        if (member.id === user.uid) navigate('/');
+        else getFamily();
+
+    }
+
+    async function signForEvent (eventId) {
+        await setDoc(doc(events, eventId), {signedBy:doc(users, user.uid)}, {merge:true});
+        getEvents();
+
+    }
+
   
  
     return <div>
+        
+        <br/>
+        <button 
+            onClick={() => navigate('/')}
+               
+        >
+            To families
+        </button>
+        <div>Family: {familyName}
+            <ul>
+                {familyMembers.map(member => 
+                
+                    <li 
+                        key={'li ' + member.id}
+                    >
+                        {member.name}, {member.email}
+                        {user.uid === familyAdminId && 
+                        member.id !== familyAdminId && 
+                        <button
+                            key={'kick ' + member.id}
+                            onClick={() => removeFamilyMember(member)}
+                        >
+                            Kick
+                        </button>}
+                        {user.uid !== familyAdminId && 
+                        member.id === familyAdminId && 
+                        <button
+                            key={'leave ' + member.id}
+                            onClick={() => removeFamilyMember(member)}
+                        >
+                            Leave family
+                        </button>}
+
+                    </li>
+                    
+               
+                
+                )}
+
+            </ul>
+        </div>
+        <input 
+            type='text'
+            placeholder={'Add family member'}
+            onChange={(event) => {setInputNewMember(event.target.value)}}
+            onKeyUp={keyUpHandler}
+            value={inputNewMember}
+        >
+
+        </input>
+        {inputNewMemberError}
+        <br/>
+       
+        
+        <h1> {year} {month} </h1>
         <button
             onClick={() => monthChange (-1)}>
             {'<<'}Prev
@@ -164,36 +253,8 @@ export default function CalendarPage() {
             Next{'>>'}
         </button>
         <br/>
-        <div>Family: {familyName}
-            <ul>
-                {familyUsers.map(user => (
-                    <li key={user.name + user.email}>
-                        {user.name}, {user.email}
-
-                    </li>
-                ))}
-
-            </ul>
-        </div>
-        <input 
-            type='text'
-            placeholder={'New family member'}
-            onChange={(event) => {setInputNewMember(event.target.value)}}
-            onKeyUp={keyUpHandler}
-            value={inputNewMember}
-        >
-
-        </input>
-        {inputNewMemberError}
-                    <br/>
-        <button 
-            onClick={() => navigate('/')}
-               
-        >
-            To families
-        </button>
+        <br/>
         
-        <h1> {year} {month} </h1>
                
              
         <CalendarDraw
@@ -210,6 +271,8 @@ export default function CalendarPage() {
             year={year}
             addEvent={addEvent}
             deleteEvent={deleteEvent}
+            changeEvent={changeEvent}
+            signForEvent={signForEvent}
         /> : null}
 
     </div>

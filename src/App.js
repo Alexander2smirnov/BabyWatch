@@ -12,8 +12,6 @@ import { doc, setDoc } from 'firebase/firestore';
 import { users, families } from './firebaseCustom.js';
 
 
-
-
 function App() {
   const [user, setUser] = useState(null);
    
@@ -35,6 +33,7 @@ function App() {
           <header className="App-header">
 
             <Nav/>
+          
           </header>
           {!user ? <Welcome /> : 
           

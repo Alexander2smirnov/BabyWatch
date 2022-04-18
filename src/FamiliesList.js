@@ -10,6 +10,7 @@ import UserContext from './userContext';
 export default function FamiliesList () {
 
     const user = useContext (UserContext);
+    const [tryDeleteFamily, setTryDeleteFamily] = useState();
     const [familiesData, setFamiliesData] = useState([]);
 
     useEffect(() => {
@@ -56,10 +57,22 @@ export default function FamiliesList () {
                 key={family.id}
             >
                 <Link to={`/family/${family.id}`}>{family.data.name}</Link>
-                {family.data.admin.id !== user.uid ? null : 
+                {family.data.admin.id === user.uid && 
+                tryDeleteFamily !== family.id && 
                 <button
-                    onClick={() => deleteFamily(family.id)}
+                    onClick={() => setTryDeleteFamily(family.id)}
                 >Delete</button>}
+
+                {family.data.admin.id === user.uid && 
+                tryDeleteFamily === family.id && 
+                <>
+                    Are you sure?
+                    <button
+                        onClick={() => deleteFamily(family.id)}
+                    >   
+                        Yes
+                    </button>
+                </>}
             </li>)}
         </ul>
         <button
