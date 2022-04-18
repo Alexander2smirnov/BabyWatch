@@ -112,15 +112,13 @@ export default function CalendarPage() {
         } catch (e) {
             console.error("Error adding document: ", e);
         }
-
+        
         getEvents();
-
-        //setData(newData);
     }
 
     async function changeEvent (id, timeStart, timeEnd, title) {
         try { 
-            if (title) await setDoc(doc(events, id), {title}, {merge:true});
+            if (title) await setDoc(doc(events, id), {title}, {merge:true});  //ПЕРЕПИСАТЬ
             if (timeStart) await setDoc(doc(events, id), {timeStart}, {merge:true});
             if (timeEnd) await setDoc(doc(events, id), {timeEnd}, {merge:true});
         } catch (e) {
@@ -181,7 +179,7 @@ export default function CalendarPage() {
     }
 
     async function signForEvent (eventId) {
-        await setDoc(doc(events, eventId), {signedBy:doc(users, user.uid)}, {merge:true});
+        await setDoc(doc(events, eventId), {signedBy: doc(users, user.uid)}, {merge:true});
         getEvents();
 
     }
@@ -214,7 +212,7 @@ export default function CalendarPage() {
                             Kick
                         </button>}
                         {user.uid !== familyAdminId && 
-                        member.id === familyAdminId && 
+                        user.uid === member.id && 
                         <button
                             key={'leave ' + member.id}
                             onClick={() => removeFamilyMember(member)}
