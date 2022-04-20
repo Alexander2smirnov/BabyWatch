@@ -10,16 +10,12 @@ export default function CreateFamily({createFamily}) {
             createFamily(inputFamilyName); 
             setInputFamilyName('');
             setCreatingFamily(false);
-    
         }
-    
         if (event.key === 'Escape') {
             setInputFamilyName('');
             setCreatingFamily(false);
         }
-    
     }
-    
     
     return <div>
         {!creatingFamily && 
@@ -37,17 +33,11 @@ export default function CreateFamily({createFamily}) {
                 onKeyUp={(event) => keyUpHandler(event)}
                 value={inputFamilyName}
             />
-
             <button
                 onClick={event => keyUpHandler(event)}
             >
-                Submit
-                
+                Submit    
             </button>
         </>}
-
-    
-    
     </div>
-
 }

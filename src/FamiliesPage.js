@@ -9,19 +9,15 @@ import FamiliesList from "./FamiliesList";
 import FamiliesPendingInvite from "./FamiliesPendingInvite";
 
 
-
-
 export default function FamiliesPage () {
-
     const user = useContext (UserContext);
+
     const [familiesUserIsIn, setFamiliesUserIsIn] = useState([]);
     const [familierUserInvitedTo, setFamilierUserInvitedTo] = useState([]);
     
-
     useEffect(() => {
         getFamilies();
-        getInvites();
-        
+        getInvites();    
     }, [user])
     
     async function getFamilies() {
@@ -88,7 +84,6 @@ export default function FamiliesPage () {
         <FamiliesPendingInvite 
             familierUserInvitedTo={familierUserInvitedTo}
             inviteReaction={inviteReaction}
-
         />
         
         <CreateFamily

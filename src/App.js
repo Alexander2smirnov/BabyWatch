@@ -30,14 +30,10 @@ function App() {
       <Router>
         <UserContext.Provider value={user}>
           <header className="App-header">
-
             <Nav/>
-          
           </header>
           {!user ? <Welcome /> : 
-          
             <Routes>
-              
               <Route path='/' element={<FamiliesPage/>}/>
               <Route path='/family/:familyId' element={<CalendarPage />}/>
             </Routes>}
