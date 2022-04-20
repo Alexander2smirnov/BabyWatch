@@ -4,7 +4,7 @@ import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import Nav from './Nav';
 import CalendarPage from './CalendarPage';
 import Welcome from './Welcome';
-import FamiliesList from './FamiliesList'
+import FamiliesPage from './FamiliesPage'
 import {auth} from './firebaseCustom.js';
 import {onAuthStateChanged} from "firebase/auth";
 import UserContext from './userContext';
@@ -18,7 +18,6 @@ function App() {
   useEffect(() => {
    
     const authState = onAuthStateChanged(auth, (usr) => {
-      console.log('usr', usr);
       setUser(usr || null);  
       if (usr) setDoc(doc(users, usr.uid), {name: usr.displayName, email: usr.email});
     });
@@ -39,7 +38,7 @@ function App() {
           
             <Routes>
               
-              <Route path='/' element={<FamiliesList/>}/>
+              <Route path='/' element={<FamiliesPage/>}/>
               <Route path='/family/:familyId' element={<CalendarPage />}/>
             </Routes>}
 

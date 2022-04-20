@@ -15,11 +15,11 @@ export default function DayBreakdown ({data, year, month, day, addEvent, deleteE
     const user = useContext(UserContext);
     const current = data.filter(obj => obj.month === month && obj.day === day && obj.year == year);
 
-    useEffect (() => {
-        setChangeTitle('');
-        setChangeTimeEnd('');
-        setChangeTimeStart('');
-    }, [eventToChange])
+    // useEffect (() => {
+    //     setChangeTitle('');
+    //     setChangeTimeEnd('');
+    //     setChangeTimeStart('');
+    // }, [eventToChange])
 
     useEffect(() => {
         setEventToChange();
@@ -130,7 +130,13 @@ export default function DayBreakdown ({data, year, month, day, addEvent, deleteE
                 </>
                 :
                 <button
-                    onClick={() => setEventToChange(obj)}
+                    onClick={() => {
+                        setEventToChange(obj);
+                        setChangeTitle(obj.title);
+                        setChangeTimeStart(obj.timeStart);
+                        setChangeTimeEnd(obj.timeEnd);
+                        console.log(obj);
+                    }}
                 >
                 Change
                 </button>}

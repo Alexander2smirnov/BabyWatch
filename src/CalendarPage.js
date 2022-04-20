@@ -25,10 +25,10 @@ export default function CalendarPage() {
     const [familyAdminId, setFamilyAdminId] = useState();
     const [familyName, setFamilyName] = useState('');
     const [inputNewMember, setInputNewMember] = useState ('');
-    const [inputNewMemberError, setInputNewMemberError] = useState(null);
+    const [inputNewMemberError, setInputNewMemberError] = useState();
     
     const [data, setData] = useState([]);
-    const [showDay, setShowDay] = useState(null);
+    const [showDay, setShowDay] = useState();
     const [date, setDate] = useState(new Date());
     
     const monthNum = date.getMonth();
@@ -112,7 +112,7 @@ export default function CalendarPage() {
         } catch (e) {
             console.error("Error adding document: ", e);
         }
-        
+
         getEvents();
     }
 
@@ -158,9 +158,9 @@ export default function CalendarPage() {
             console.log(newMemberRef);
 
             try {
-                await updateDoc(doc(families, params.familyId), {users: arrayUnion(newMemberRef)});
+                await updateDoc(doc(families, params.familyId), {invited: arrayUnion(newMemberRef)});
                 getFamily();
-            }catch {
+            } catch {
                 console.log('error updating family')
             }
 
@@ -171,7 +171,7 @@ export default function CalendarPage() {
 
     async function removeFamilyMember (member) {
       
-        const memberRef = (await getDoc(doc(users, member.id))).ref;
+        const memberRef = doc(users, member.id);
         await updateDoc(doc(families, params.familyId), {users: arrayRemove(memberRef)});
         if (member.id === user.uid) navigate('/');
         else getFamily();
