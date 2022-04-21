@@ -27,10 +27,10 @@ export default function Welcome() {
 
 
     return <div>
-        Welcome
+       
         <button
             onClick={onGoogleAuthClick}>
-            Google
+            Sign in with Google
 
         </button>
     </div>

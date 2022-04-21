@@ -1,17 +1,11 @@
-import DayBreakdown from './DayBreakdown';
-import EventDisplay from './EventDisplay';
-import {BrowserRouter as Router, Routes, Route, Link} from 'react-router-dom'
-import React, { useEffect , useState, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import initialCalendar, { weekShift } from './initialCalender';
-
 import './Calendar.css'
 
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 export default function CalendarDraw ({data, clickHandler, shiftDate, showDay}) {
-
     const date = shiftDate;
-    
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const month = months[date.getMonth()];
     const year = date.getFullYear();
    
@@ -70,7 +64,8 @@ export default function CalendarDraw ({data, clickHandler, shiftDate, showDay}) 
                 {tr.map((td, d) => 
                     <td className={`calendar-cell 
                             calendar-cell-has-events-${!!calendar[w][d].events}
-                            calendar-selected-${ifShowDay(w,d)}`} 
+                            calendar-selected-${ifShowDay(w,d)}
+                            calendar-cell-filled-${!!calendar[w][d].day}`} 
                         key={w + ' ' + d}
                         onClick={() => {
                             if (calendar[w][d].day) {

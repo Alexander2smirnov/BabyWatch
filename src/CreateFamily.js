@@ -6,6 +6,8 @@ export default function CreateFamily({createFamily}) {
     const [creatingFamily, setCreatingFamily] = useState(false);
 
     function keyUpHandler(event) {
+        if (!inputFamilyName.trim()) return;
+        
         if (event.key === 'Enter' || event.key === undefined) {
             createFamily(inputFamilyName); 
             setInputFamilyName('');
@@ -17,7 +19,7 @@ export default function CreateFamily({createFamily}) {
         }
     }
     
-    return <div>
+    return <div className="create-family">
         {!creatingFamily && 
         <button
             onClick={() => setCreatingFamily(true)}
@@ -36,7 +38,7 @@ export default function CreateFamily({createFamily}) {
             <button
                 onClick={event => keyUpHandler(event)}
             >
-                Submit    
+                Create family    
             </button>
         </>}
     </div>

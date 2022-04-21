@@ -1,12 +1,11 @@
-import { async } from "@firebase/util";
 import { addDoc, arrayRemove, arrayUnion, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { families, users } from './firebaseCustom';
 import UserContext from './userContext';
 import CreateFamily from "./CreateFamily";
 import FamiliesList from "./FamiliesList";
 import FamiliesPendingInvite from "./FamiliesPendingInvite";
+import './families.css';
 
 
 export default function FamiliesPage () {
@@ -38,7 +37,6 @@ export default function FamiliesPage () {
             return {id: doc.id, data: doc.data()}
         }));
     }
-    
 
     async function createFamily (name='no name') {
         try {
@@ -74,13 +72,15 @@ export default function FamiliesPage () {
         }   
     }
 
-
-    return <div>
+    return <>
+        {!!familiesUserIsIn.length && 
+        <h2>Your families:</h2>}
         <FamiliesList 
             familiesUserIsIn={familiesUserIsIn}
             deleteFamily={deleteFamily}
         />
-
+        {!!familierUserInvitedTo.length && 
+        <h2>You are invited:</h2>}
         <FamiliesPendingInvite 
             familierUserInvitedTo={familierUserInvitedTo}
             inviteReaction={inviteReaction}
@@ -89,6 +89,6 @@ export default function FamiliesPage () {
         <CreateFamily
             createFamily={createFamily}
         />
-    </div>
+    </>
 
 }

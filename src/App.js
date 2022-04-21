@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState, useEffect, useInsertionEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import Nav from './Nav';
 import CalendarPage from './CalendarPage';
@@ -9,7 +9,7 @@ import {auth} from './firebaseCustom.js';
 import {onAuthStateChanged} from "firebase/auth";
 import UserContext from './userContext';
 import { doc, setDoc } from 'firebase/firestore';
-import { users, families } from './firebaseCustom.js';
+import { users } from './firebaseCustom.js';
 
 
 function App() {
@@ -29,17 +29,20 @@ function App() {
     <div className="App">
       <Router>
         <UserContext.Provider value={user}>
-          <header className="App-header">
+          <header className="header">
             <Nav/>
           </header>
-          {!user ? <Welcome /> : 
-            <Routes>
-              <Route path='/' element={<FamiliesPage/>}/>
-              <Route path='/family/:familyId' element={<CalendarPage />}/>
-            </Routes>}
-
+          <main className="main">
+            <div className='main-container'>
+              {!user ? <Welcome /> : 
+              <Routes>
+                <Route path='/' element={<FamiliesPage/>}/>
+                <Route path='/family/:familyId' element={<CalendarPage />}/>
+              </Routes>}
+            </div>
+          </main>
         </UserContext.Provider>   
-        <footer>
+        <footer className='footer'>
         </footer>
       </Router>
     </div>

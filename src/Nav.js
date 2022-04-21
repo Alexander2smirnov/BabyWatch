@@ -3,6 +3,7 @@ import React, { useContext } from 'react';
 import {BrowserRouter as Router, Routes, Route, useNavigate} from 'react-router-dom'
 import UserContext from './userContext';
 import {auth} from './firebaseCustom.js';
+import { Link } from "react-router-dom";
 
 
 
@@ -17,12 +18,17 @@ export default function Nav () {
         
     }
 
-    return <div>Nav
-        {user && 
-        <button
-        onClick={logout}>
-            LogOut    
-        </button>}
-    </div>
+    return <div className='header-wrap'>
+        <nav>
+            <Link to="/">Families</Link>
+        </nav>
+        <div className='logout-button-wrap'>
+            {user && 
+            <button
+            onClick={logout}>
+                LogOut    
+            </button>}
+        </div>
+    </div> 
 }
 

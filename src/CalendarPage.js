@@ -8,6 +8,7 @@ import CalendarDraw from './CalendarDraw';
 import FamilyMembersList from './FamilyMembersList';
 import DayBreakdown from './DayBreakdown';
 import './Calendar.css'
+import './calendarPage.css'
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -156,8 +157,7 @@ export default function CalendarPage() {
         getEvents();
     }
  
-    return <div>
-        <br/>
+    return <div className='calendar-page'>
         <FamilyMembersList 
             familyName={familyName}
             familyAdminId={familyAdminId}
@@ -165,34 +165,25 @@ export default function CalendarPage() {
             addNewFamilyMember={addNewFamilyMember}
             removeFamilyMember={removeFamilyMember}
         />
-        <br/>
-        <button 
-            onClick={() => navigate('/')}
-        >
-            To families
-        </button>
-        
-        <br/>
-        
-        <h1> {year} {month} </h1>
-        <button
-            onClick={() => monthChange (-1)}>
-            {'<< '}Prev
-        </button>
-        <button
-            onClick={() => monthChange (1)}>
-            Next{' >>'}
-        </button>
-        <br/>
-        <br/>
-             
-        <CalendarDraw
-            data={data}
-            clickHandler={cellClickHandler}
-            shiftDate={date}
-            showDay={showDay?.day}
-        />
-   
+        <div className='calendar-layout'>
+            <h1> {year} {month} </h1>
+            <div className='calendar-page__month-switches'>
+                <button
+                    onClick={() => monthChange (-1)}>
+                    {'<< '}Prev
+                </button>
+                <button
+                    onClick={() => monthChange (1)}>
+                    Next{' >>'}
+                </button>
+            </div>    
+            <CalendarDraw
+                data={data}
+                clickHandler={cellClickHandler}
+                shiftDate={date}
+                showDay={showDay?.day}
+            />
+        </div>
         {showDay ? <DayBreakdown 
             data={data}
             day={showDay.day}

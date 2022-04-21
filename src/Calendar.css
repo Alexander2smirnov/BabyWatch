@@ -1,11 +1,14 @@
 td {
-    width: 40px;
-    height: 40px;
+    width: 3rem;
+    height: 3rem;
     border-color: rgb(126, 125, 125);
     border-style: solid;
     border-width: 1px;
     box-sizing: border-box;
-    
+    text-align: end;
+    padding-right: 0.4rem;
+    font-weight: 500;
+       
    
 
 }
@@ -14,15 +17,23 @@ table {
     border-collapse: collapse;
 
 }
+.calendar-cell-filled-true {
+    background-color: rgb(86, 211, 150);
+
+}
+.calendar-cell-filled-false {
+    border-style: dotted;
+}
 
 .calendar-cell-has-events-true {
-    background-color: rgb(135, 247, 193);
+    background-color: rgb(64, 114, 90);
+    color: white;
 }
 
 .calendar-selected-true {
     border-style:solid;
     border-color: black;
     box-sizing: border-box;
-    outline: 2px solid green;
+    outline: 3px solid rgb(189, 248, 229);
     outline-offset: -1px;
 }

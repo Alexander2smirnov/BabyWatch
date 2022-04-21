@@ -1,0 +1,15 @@
+.families-list__delete-button {
+    margin-left: 0.5rem;
+}
+
+.families-list__delete-confirmation {
+    color: red;
+    margin-left: 0.5rem;
+
+}
+
+.families-list__families {
+    display: flex;
+    justify-content: space-between;
+    max-width: 20rem;
+}

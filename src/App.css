@@ -1,0 +1,152 @@
+.App {
+    line-height: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+    background-color: rgb(204, 228, 219);
+}
+
+.main {
+    display:block;
+    min-height: auto;
+    padding-top: 0;
+    margin: 0;
+    padding-bottom: 2rem;
+
+}
+
+nav > a {
+    color:white;
+}
+
+.logout-button-wrap > button {
+    color:black;
+    background-color: rgb(86, 211, 150);
+    border-color: grey;
+    border-width: 0.5px;
+    
+}
+
+.header {
+    height: 4rem;
+    width: 100%;
+    background-color: rgb(34, 132, 95, 0.8);
+    position: fixed;
+    color: white;
+
+}
+
+
+.footer {
+    height: 6vh;
+    min-height: min-content;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: rgba(68, 185, 140, 0.811);
+    justify-content: space-between;
+
+}
+
+.header-wrap {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    margin-left: 15vw;
+    margin-right: 15vw;
+    
+}
+
+.main-container {
+    margin-left: 15vw;
+    margin-right: 15vw;
+    margin-top: 5.5rem;
+    
+}
+
+button {
+    color: white;
+    
+    background-color:rgb(41, 159, 114);
+    border-radius: 5px;
+    border-width: 0.8px;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    border-color: rgb(22, 79, 57);
+    box-shadow: none;
+    font-weight: 100;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: top;
+}
+
+input {
+    background-color: rgb(232, 247, 242);
+    width: 20rem;
+    border-radius: 5px;
+    border-width: 0.5px;
+    line-height: 1.5rem;
+    margin-right: 0.1rem;
+}
+
+
+input:focus-visible {
+    outline: 0;
+    
+}
+
+select {
+    background-color: rgb(232, 247, 242);
+    border-radius: 5px;
+    border-width: 0.5px;
+    line-height: 1.5rem;
+    margin-right: 0.1rem;
+    height: 1.75rem;
+}
+
+
+ul {
+    list-style-type: none;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 0px;
+}
+li {
+    line-height: 1.5rem;
+    margin-bottom: 0.4rem;
+    font-weight:500 ;
+}
+
+h2 {
+    font-size: 1.5em;
+    margin-block-start: 0.83rem;
+    margin-block-end: 0.83rem;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+}
+
+h4 {
+    display: block;
+    margin-block-start: 1.5rem;
+    margin-block-end: 0.5rem;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+}
+
+a {
+    color: black;
+    text-decoration: none;
+    
+}
+
+.logout-button-wrap {
+    align-items: center;
+}

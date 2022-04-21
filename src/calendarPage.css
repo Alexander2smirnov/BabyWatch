@@ -1,0 +1,53 @@
+.calendar-page__to-families {
+    margin-top: 1.2rem;
+    font-size: 1.2rem;
+    line-height: 1.3rem;
+}
+
+.calendar-page__members-list {
+    font-size: 0.8rem;
+}
+
+.calendar-page__event {
+    display: flex;
+    width: 50rem;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.calendar-page__event-button {
+    margin-left: 0.2rem;
+    border-width: 0;
+    font-size: 0.8rem;
+    line-height: 1.2rem;
+    font-weight: 100;
+    
+}
+
+.calendar-layout {
+    width: max-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.calendar-page__month-switches > button {
+    margin-bottom: 1rem;
+    margin-left: 0.3rem;
+}
+
+.calendar-page__kick-member-button{
+    margin-left: 0.5rem;
+    border-width: 0;
+    font-size: 0.7rem;
+    line-height: 1rem;
+    font-weight: 100;
+
+}
+
+.calendar-page__members-list > li {
+    line-height: 1rem;
+    display: flex;
+    width: 27.15rem;
+    justify-content: space-between;
+}

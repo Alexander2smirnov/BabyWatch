@@ -1,21 +1,28 @@
 import React from "react";
 
 export default function FamiliesPendingInvite({familierUserInvitedTo, inviteReaction}) {
-    return <ul>
-        {familierUserInvitedTo.map(family => 
-        <li key={family.id}>
-            {family.data.name}
-            <button
-                onClick={() => inviteReaction(family.id, true)}
-            >
-                Accept
-            </button>
-            <button 
-                onClick={() => inviteReaction(family.id, false)}
-            >
-                Decline
-            </button>
+    return <div>
+        <ul>
+            {familierUserInvitedTo.map(family => 
+            <li key={family.id}>
+                <div className="families-list__families">
+                    {family.data.name}
+                    <span>
+                        <button
+                            onClick={() => inviteReaction(family.id, true)}
+                        >
+                            Accept
+                        </button>
 
-        </li>)}
-    </ul>
+                        <button style={{marginLeft:"0.2rem"}} 
+                            onClick={() => inviteReaction(family.id, false)}
+                        >
+                            Decline
+                        </button>
+                    </span>
+                </div>
+                    
+            </li>)}
+        </ul>
+    </div>
 }

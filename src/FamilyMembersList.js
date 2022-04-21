@@ -16,8 +16,10 @@ export default function FamilyMembersList
     }
     
     return <>
-        <div>Family: {familyName}
-            <ul>
+        <div>
+            <h2>Family: {familyName}</h2>
+            <h4>Members:</h4>
+            <ul className="calendar-page__members-list"> 
                 {familyMembers.map(member => 
                     <li 
                         key={'li ' + member.id}
@@ -25,7 +27,8 @@ export default function FamilyMembersList
                         {member.name}, {member.email}
                         {user.uid === familyAdminId && 
                         member.id !== familyAdminId && 
-                        <button
+                        <button 
+                            className='calendar-page__kick-member-button'
                             onClick={() => removeFamilyMember(member)}
                         >
                             Kick
@@ -33,6 +36,7 @@ export default function FamilyMembersList
                         {user.uid !== familyAdminId && 
                         user.uid === member.id && 
                         <button
+                            className='calendar-page__kick-member-button'
                             key={'leave ' + member.id}
                             onClick={() => removeFamilyMember(member)}
                         >
@@ -42,6 +46,7 @@ export default function FamilyMembersList
                 )}
             </ul>
         </div>
+        <form>
         <input 
             type='text'
             placeholder={'Add family member'}
@@ -49,6 +54,8 @@ export default function FamilyMembersList
             onKeyUp={keyUpHandler}
             value={inputNewMember}
         />
+        <button type="submit">Send request</button>
+        </form>
         {inputNewMemberError}
     </>
 
