@@ -2,17 +2,17 @@ import React, { useContext, useState } from "react";
 import UserContext from "./userContext";
 
 export default function FamilyMembersList
-({familyName, familyAdminId, familyMembers, addNewFamilyMember, removeFamilyMember}) {
+({familyName, familyAdminId, familyMembers, addNewFamilyMember, removeFamilyMember, inputNewMemberError}) {
     const user = useContext(UserContext);
     
     const [inputNewMember, setInputNewMember] = useState('');
-    const [inputNewMemberError, setInputNewMemberError] = useState();
-
-    function keyUpHandler (event) {
-        if (event.key === 'Enter') {
-            addNewFamilyMember(inputNewMember);
-            setInputNewMember('');
-        }
+    
+    function submitHandler (event) {
+        event.preventDefault();
+        
+        addNewFamilyMember(inputNewMember);
+        setInputNewMember('');
+        
     }
     
     return <>
@@ -46,17 +46,16 @@ export default function FamilyMembersList
                 )}
             </ul>
         </div>
-        <form>
-        <input 
-            type='text'
-            placeholder={'Add family member'}
-            onChange={(event) => {setInputNewMember(event.target.value)}}
-            onKeyUp={keyUpHandler}
-            value={inputNewMember}
-        />
-        <button type="submit">Send request</button>
+        <form onSubmit={submitHandler}>
+            <input 
+                type='text'
+                placeholder={'Add family member'}
+                onChange={(event) => {setInputNewMember(event.target.value)}}
+                value={inputNewMember}
+            />
+            <button type="submit">Send request</button>
         </form>
-        {inputNewMemberError}
+        <p>{inputNewMemberError}</p>
     </>
 
 }

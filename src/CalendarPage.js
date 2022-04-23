@@ -21,7 +21,6 @@ export default function CalendarPage() {
     const [familyMembers, setFamilyMembers] = useState([]);
     const [familyAdminId, setFamilyAdminId] = useState();
     const [familyName, setFamilyName] = useState('');
-    const [inputNewMember, setInputNewMember] = useState('');
     const [inputNewMemberError, setInputNewMemberError] = useState();
     
     const [data, setData] = useState([]);
@@ -129,7 +128,7 @@ export default function CalendarPage() {
         const userSnapshot = await getDocs(q);
         if (!userSnapshot.docs.length) setInputNewMemberError('E-mail not found, try again pls');
         else {
-            setInputNewMemberError(null);
+            setInputNewMemberError("Request succesfully sent");
             const newMemberRef = userSnapshot.docs[0].ref;
             try {
                 await updateDoc(doc(families, params.familyId), {invited: arrayUnion(newMemberRef)});
@@ -164,6 +163,7 @@ export default function CalendarPage() {
             familyMembers={familyMembers}
             addNewFamilyMember={addNewFamilyMember}
             removeFamilyMember={removeFamilyMember}
+            inputNewMemberError={inputNewMemberError}
         />
         <div className='calendar-layout'>
             <h1> {year} {month} </h1>
