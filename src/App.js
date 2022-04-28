@@ -1,15 +1,15 @@
-import './App.css';
 import React, { useState, useEffect } from 'react';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import Nav from './Nav';
 import CalendarPage from './CalendarPage';
 import Welcome from './Welcome';
 import FamiliesPage from './FamiliesPage'
-import {auth} from './firebaseCustom.js';
-import {onAuthStateChanged} from "firebase/auth";
+import { auth } from './firebaseCustom.js';
+import { onAuthStateChanged } from "firebase/auth";
 import UserContext from './userContext';
 import { doc, setDoc } from 'firebase/firestore';
 import { users } from './firebaseCustom.js';
+import './App.css';
 
 
 function App() {

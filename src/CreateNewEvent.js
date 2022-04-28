@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import SelectMinutes from "./SelectMinutes";
 import SelectHours from "./SelectHours";
 
-export default function CreateNewEvent ({year, month, day, addEvent}) {
+export default function CreateNewEvent({year, month, day, addEvent}) {
     const [inputTitle, setInputTitle] = useState('');
     const [inputHourStart, setInputHourStart] = useState('');
     const [inputMinuteStart, setInputMinuteStart] = useState('');
@@ -15,7 +15,7 @@ export default function CreateNewEvent ({year, month, day, addEvent}) {
         setInputMinuteStart('00');
         setInputHourEnd('10');
         setInputMinuteEnd('00')
-    }, [year, month, day])
+    }, [year, month, day]);
 
     function changeInputHandler(event, setFn) {
         if ((event.key === 'Enter' || event.key === undefined) && inputTitle.trim()) {

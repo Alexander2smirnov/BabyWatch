@@ -7,7 +7,7 @@ export default function FamiliesList({familiesUserIsIn, deleteFamily}) {
     const [tryDeleteFamily, setTryDeleteFamily] = useState();
     const user = useContext(UserContext);
 
-    return <div classname="families-list">
+    return <div className="families-list">
         <ul>
             {familiesUserIsIn.map(family => 
             <li 

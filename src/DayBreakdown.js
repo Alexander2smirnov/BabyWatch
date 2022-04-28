@@ -29,10 +29,8 @@ export default function DayBreakdown
             changeEvent={changeEvent}
             signForEvent={signForEvent}
             unsignForEvent={unsignForEvent}
-        />
-        
+        />   
     </div>
-
 }
 
 

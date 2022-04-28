@@ -1,18 +1,16 @@
 import { signOut } from 'firebase/auth';
 import React, { useContext } from 'react';
-import {BrowserRouter as Router, Routes, Route, useNavigate} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import UserContext from './userContext';
 import {auth} from './firebaseCustom.js';
 import { Link } from "react-router-dom";
 
 
-
-
 export default function Nav () {
     const navigate = useNavigate();
-
     const user = useContext(UserContext);
-    async function logout () {
+    
+    async function logOut () {
         await signOut(auth);
         navigate('/');
         
@@ -25,7 +23,7 @@ export default function Nav () {
         <div className='logout-button-wrap'>
             {user && 
             <button
-            onClick={logout}>
+            onClick={logOut}>
                 LogOut    
             </button>}
         </div>

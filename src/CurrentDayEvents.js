@@ -100,7 +100,8 @@ export default function CurrentDayEvents({data, deleteEvent, changeEvent, signFo
                 </span>}
             </span>}
             
-            {event.signedBy ? <>
+            {event.signedBy ? 
+            <>
                 <span> signed by {event.signedByName}</span> 
                 {event.signedById === user.uid && 
                 <button

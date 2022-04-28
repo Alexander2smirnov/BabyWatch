@@ -30,15 +30,14 @@ export default function CalendarDraw ({data, clickHandler, shiftDate, showDay}) 
         }
         return newCalendar;
       
-    },[data, shiftDate])
+    },[data, shiftDate]);
 
     function getWeek (num) {
-        return Math.floor((num-1 + shift) / 7)
-
+        return Math.floor((num-1 + shift) / 7);
     }
 
     function getWeekDay (num) {
-        return (num-1 + shift)%7
+        return (num-1 + shift)%7;
     }
 
     function getDay (week, weekDay) {
@@ -52,36 +51,33 @@ export default function CalendarDraw ({data, clickHandler, shiftDate, showDay}) 
 
     function ifShowDay (w, d) {
         return (getDay(w, d) === showDay);
-    }
-   
-   
+    } 
 
     return <div>     
         <table>
-        <tbody>
-        {calendar.map((tr, w) => { return (
-            <tr key={w}>
-                {tr.map((td, d) => 
-                    <td className={`calendar-cell 
-                            calendar-cell-has-events-${!!calendar[w][d].events}
-                            calendar-selected-${ifShowDay(w,d)}
-                            calendar-cell-filled-${!!calendar[w][d].day}`} 
-                        key={w + ' ' + d}
-                        onClick={() => {
-                            if (calendar[w][d].day) {
-                                clickHandler(year, month, getDay(w, d));
-                                
-                            }
-                        }}
-                    >
-                        {td.day}
-                    </td>
-                )}
-            </tr>)})}
-        </tbody>
-
+            <tbody>
+            {calendar.map((tr, w) => { return (
+                <tr key={w}>
+                    {tr.map((td, d) => 
+                        <td 
+                            className={
+                                `calendar-cell 
+                                calendar-cell-has-events-${!!calendar[w][d].events}
+                                calendar-selected-${ifShowDay(w,d)}
+                                calendar-cell-filled-${!!calendar[w][d].day}`} 
+                            key={w + ' ' + d}
+                            onClick={() => {
+                                if (calendar[w][d].day) {
+                                    clickHandler(year, month, getDay(w, d));
+                                    
+                                }
+                            }}
+                        >
+                            {td.day}
+                        </td>
+                    )}
+                </tr>)})}
+            </tbody>
         </table>
-      
     </div>
-
 }

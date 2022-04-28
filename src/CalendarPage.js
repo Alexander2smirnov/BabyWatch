@@ -34,14 +34,16 @@ export default function CalendarPage() {
     useEffect (() => { 
         getEvents(); 
         getFamily();
-    }, [month, year, params.familyId])
+    }, [month, year, params.familyId]);
     
     async function getEvents() {
         const q = query (events, 
             where('familyId', '==', params.familyId), 
             where('month', '==', month), 
-            where('year', '==', year))
-        const querySnapshot = await getDocs(q);       
+            where('year', '==', year));
+
+        const querySnapshot = await getDocs(q);
+
         setData(await Promise.all(querySnapshot.docs.map(async (docSnapshot) => {
             const eventData = docSnapshot.data();
             return {
@@ -169,11 +171,13 @@ export default function CalendarPage() {
             <h1> {year} {month} </h1>
             <div className='calendar-page__month-switches'>
                 <button
-                    onClick={() => monthChange (-1)}>
+                    onClick={() => monthChange (-1)}
+                >
                     {'<< '}Prev
                 </button>
                 <button
-                    onClick={() => monthChange (1)}>
+                    onClick={() => monthChange (1)}
+                >
                     Next{' >>'}
                 </button>
             </div>    

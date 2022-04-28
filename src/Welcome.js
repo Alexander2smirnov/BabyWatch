@@ -1,6 +1,5 @@
-import React, {useState} from "react";
-
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import React from "react";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import {auth} from './firebaseCustom';
 
 const provider = new GoogleAuthProvider();
@@ -18,7 +17,6 @@ export default function Welcome() {
                 
                 const errorCode = error.code;
                 const errorMessage = error.message;
-                
                 const email = error.email;
                 const credential = GoogleAuthProvider.credentialFromError(error);
                 
