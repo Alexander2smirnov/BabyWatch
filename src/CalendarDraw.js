@@ -30,7 +30,7 @@ export default function CalendarDraw ({data, clickHandler, shiftDate, showDay}) 
         }
         return newCalendar;
       
-    },[data, shiftDate]);
+    }, [data, shiftDate]);
 
     function getWeek (num) {
         return Math.floor((num-1 + shift) / 7);

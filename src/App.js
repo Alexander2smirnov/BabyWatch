@@ -16,7 +16,6 @@ function App() {
   const [user, setUser] = useState(null);
    
   useEffect(() => {
-   
     const authState = onAuthStateChanged(auth, (usr) => {
       setUser(usr || null);  
       if (usr) setDoc(doc(users, usr.uid), {name: usr.displayName, email: usr.email});

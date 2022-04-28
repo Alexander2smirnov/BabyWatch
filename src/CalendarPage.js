@@ -125,7 +125,7 @@ export default function CalendarPage() {
 
     async function addNewFamilyMember(str) {
         const email = str.trim();
-        const q = query (users, where('email', '==', email)); 
+        const q = query(users, where('email', '==', email)); 
            
         const userSnapshot = await getDocs(q);
         if (!userSnapshot.docs.length) setInputNewMemberError('E-mail not found, try again pls');
