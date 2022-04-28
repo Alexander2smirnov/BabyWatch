@@ -18,7 +18,8 @@ table {
 
 }
 .calendar-cell-filled-true {
-    background-color: rgb(86, 211, 150);
+    /* background-color: rgb(86, 211, 150); */
+    background-color: #cdccc9;
 
 }
 .calendar-cell-filled-false {
@@ -26,7 +27,8 @@ table {
 }
 
 .calendar-cell-has-events-true {
-    background-color: rgb(64, 114, 90);
+    /* background-color: rgb(64, 114, 90); */
+    background-color: #50689f;
     color: white;
 }
 
@@ -34,6 +36,7 @@ table {
     border-style:solid;
     border-color: black;
     box-sizing: border-box;
-    outline: 3px solid rgb(189, 248, 229);
-    outline-offset: -1px;
+    outline: 3.5px solid rgb(190, 252, 249);
+    outline-offset: -2px;
+    
 }

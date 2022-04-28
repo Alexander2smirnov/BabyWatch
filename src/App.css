@@ -4,7 +4,8 @@
     flex-direction: column;
     justify-content: space-between;
     min-height: 100vh;
-    background-color: rgb(204, 228, 219);
+    /* background-color: rgb(204, 228, 219); */
+    background-color: #e5e9ed;
 }
 
 .main {
@@ -20,9 +21,9 @@ nav > a {
     color:white;
 }
 
-.logout-button-wrap > button {
-    color:black;
-    background-color: rgb(86, 211, 150);
+.logout-button-wrap  button {
+    color:white;
+    /* background-color: rgb(86, 211, 150); */
     border-color: grey;
     border-width: 0.5px;
     
@@ -31,9 +32,11 @@ nav > a {
 .header {
     height: 4rem;
     width: 100%;
-    background-color: rgb(34, 132, 95, 0.8);
+    /* background-color: rgb(34, 132, 95, 0.8); */
+    background-color: #949cb1af;
     position: fixed;
     color: white;
+    text-shadow: 0px 0px 15px #334269;
 
 }
 
@@ -45,7 +48,9 @@ nav > a {
     display: flex;
     flex-direction: row;
     align-items: center;
-    background-color: rgba(68, 185, 140, 0.811);
+    /* background-color: rgba(68, 185, 140, 0.811); */
+    background-color: #c2c1bd;
+    
     justify-content: space-between;
 
 }
@@ -70,8 +75,9 @@ nav > a {
 
 button {
     color: white;
+    background-color: #334269;
     
-    background-color:rgb(41, 159, 114);
+    /* background-color:rgb(41, 159, 114); */
     border-radius: 5px;
     border-width: 0.8px;
     font-size: 1rem;
@@ -85,7 +91,7 @@ button {
 }
 
 input {
-    background-color: rgb(232, 247, 242);
+    background-color: rgb(232, 242, 247);
     width: 20rem;
     border-radius: 5px;
     border-width: 0.5px;
@@ -100,7 +106,7 @@ input:focus-visible {
 }
 
 select {
-    background-color: rgb(232, 247, 242);
+    background-color:  rgb(232, 242, 247);
     border-radius: 5px;
     border-width: 0.5px;
     line-height: 1.5rem;
