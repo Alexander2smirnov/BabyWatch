@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import UserContext from "../userContext";
+import { useSelector } from "react-redux";
+// import UserContext from "../userContext";
 import SelectHours from "./SelectHours";
 import SelectMinutes from "./SelectMinutes";
 
 export default function CurrentDayEvents({data, deleteEvent, changeEvent, signForEvent, unsignForEvent}) {
-   const user = useContext(UserContext);
+   // const user = useContext(UserContext);
+   const user = {id: useSelector(state => state.user.userId)};
    
    const [changeTitle, setChangeTitle] = useState('');
    const [changeHourStart, setChangeHourStart] = useState('');
@@ -41,7 +43,7 @@ export default function CurrentDayEvents({data, deleteEvent, changeEvent, signFo
          <span>
             {event.title}, {event.timeStart} - {event.timeEnd}, {'created by ' + event.creatorName}  
          </span>
-         {user.uid === event.creatorId && 
+         {user.id === event.creatorId && 
          <span>
             {event === eventToChange && 
             <span>  
@@ -103,7 +105,7 @@ export default function CurrentDayEvents({data, deleteEvent, changeEvent, signFo
          {event.signedBy ? 
          <>
             <span> signed by {event.signedByName}</span> 
-            {event.signedById === user.uid && 
+            {event.signedById === user.id && 
             <button
                className="calendar-page__event-button"
                onClick={() => unsignForEvent(event.id)}
@@ -112,7 +114,7 @@ export default function CurrentDayEvents({data, deleteEvent, changeEvent, signFo
             </button>}
          </>
          : 
-         user.uid !== event.creatorId && 
+         user.id !== event.creatorId && 
          <button
             className="calendar-page__event-button"
             onClick={() => signForEvent(event.id)}

@@ -1,9 +1,11 @@
 import React, { useContext, useState } from "react";
-import UserContext from "../userContext";
+import { useSelector } from "react-redux";
+// import UserContext from "../userContext";
 
 export default function FamilyMembersList
 ({familyName, familyAdminId, familyMembers, addNewFamilyMember, removeFamilyMember, inputNewMemberError}) {
-   const user = useContext(UserContext);
+   // const user = useContext(UserContext);
+   const user = {id: useSelector(state => state.user.userId)};
    
    const [inputNewMember, setInputNewMember] = useState('');
    
@@ -25,7 +27,7 @@ export default function FamilyMembersList
                   key={'li ' + member.id}
                >
                   {member.name}, {member.email}
-                  {user.uid === familyAdminId && 
+                  {user.id === familyAdminId && 
                   member.id !== familyAdminId && 
                   <button 
                      className='calendar-page__kick-member-button'
@@ -33,8 +35,8 @@ export default function FamilyMembersList
                   >
                      Kick
                   </button>}
-                  {user.uid !== familyAdminId && 
-                  user.uid === member.id && 
+                  {user.id !== familyAdminId && 
+                  user.id === member.id && 
                   <button
                      className='calendar-page__kick-member-button'
                      key={'leave ' + member.id}

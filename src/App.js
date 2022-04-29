@@ -6,19 +6,26 @@ import Welcome from './Welcome';
 import FamiliesPage from './famiesListPage/FamiliesPage'
 import { auth } from './firebaseCustom.js';
 import { onAuthStateChanged } from "firebase/auth";
-import UserContext from './userContext';
+// import UserContext from './userContext';
 import { doc, setDoc } from 'firebase/firestore';
 import { users } from './firebaseCustom.js';
 import './App.css';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 function App() {
-   const [user, setUser] = useState(null);
+   const dispatch = useDispatch();
+   const user = {id: useSelector(state => state.user.userId)};
+
+   //const [user, setUser] = useState(null);
     
    useEffect(() => {
       const authState = onAuthStateChanged(auth, (usr) => {
-         setUser(usr || null);   
-         if (usr) setDoc(doc(users, usr.uid), {name: usr.displayName, email: usr.email});
+         //setUser(usr || null);   
+         dispatch({type: 'changeUser', payload: {userId: usr?.uid}})
+         if (usr?.uid) {
+            setDoc(doc(users, usr.uid), {name: usr.displayName, email: usr.email});
+         }
       });
 
       return () => {authState()}
@@ -27,13 +34,13 @@ function App() {
    return (
       <div className="App">
          <Router>
-            <UserContext.Provider value={user}>
+            {/* <UserContext.Provider value={user}> */}
                <header className="header">
                   <Nav/>
                </header>
                <main className="main">
                   <div className='main-container'>
-                     {!user ? 
+                     {!user?.id ? 
                      <Welcome /> : 
                      <Routes>
                         <Route path='/' element={<FamiliesPage/>}/>
@@ -41,7 +48,7 @@ function App() {
                      </Routes>}
                   </div>
                </main>
-            </UserContext.Provider>    
+            {/* </UserContext.Provider>     */}
             <footer className='footer'>
             </footer>
          </Router>

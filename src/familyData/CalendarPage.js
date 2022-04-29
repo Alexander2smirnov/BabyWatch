@@ -3,12 +3,13 @@ import {useParams, useNavigate} from 'react-router-dom'
 import {useEffect , useState, useContext} from 'react';
 import {addDoc, getDocs, where, query, deleteDoc, doc, getDoc, updateDoc, arrayUnion, setDoc, arrayRemove} from "firebase/firestore";
 import {events, families, users } from '../firebaseCustom';
-import UserContext from '../userContext';
+// import UserContext from '../userContext';
 import CalendarDraw from './CalendarDraw';
 import FamilyMembersList from './FamilyMembersList';
 import DayBreakdown from './DayBreakdown';
 import './Calendar.css'
 import './calendarPage.css'
+import { useSelector } from 'react-redux';
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -16,8 +17,9 @@ export default function CalendarPage() {
    const params = useParams();
    const navigate = useNavigate();
 
-   const user = useContext(UserContext);
-   
+   // const user = useContext(UserContext);
+   const user = {id: useSelector(state => state.user.userId)};
+
    const [familyMembers, setFamilyMembers] = useState([]);
    const [familyAdminId, setFamilyAdminId] = useState();
    const [familyName, setFamilyName] = useState('');
@@ -83,7 +85,7 @@ export default function CalendarPage() {
    async function addEvent(year, month, day, timeStart, timeEnd, title) {
       const newEvent = {
          familyId: params.familyId,
-         creator: doc(users, user.uid),
+         creator: doc(users, user.id),
          year,
          month,
          day,
@@ -144,12 +146,12 @@ export default function CalendarPage() {
    async function removeFamilyMember(member) {
       const memberRef = doc(users, member.id);
       await updateDoc(doc(families, params.familyId), {users: arrayRemove(memberRef)});
-      if (member.id === user.uid) navigate('/');
+      if (member.id === user.id) navigate('/');
       else getFamily();
    }
 
    async function signForEvent(eventId) {
-      await setDoc(doc(events, eventId), {signedBy: doc(users, user.uid)}, {merge:true});
+      await setDoc(doc(events, eventId), {signedBy: doc(users, user.id)}, {merge:true});
       getEvents();
    }
    

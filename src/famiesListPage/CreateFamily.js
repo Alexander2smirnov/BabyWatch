@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 
-
 export default function CreateFamily({createFamily}) {
    const [inputFamilyName, setInputFamilyName] = useState('');
    const [creatingFamily, setCreatingFamily] = useState(false);

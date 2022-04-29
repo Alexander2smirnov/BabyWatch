@@ -1,12 +1,14 @@
 import React, { useContext, useMemo, useState }  from 'react';
 import CreateNewEvent from './CreateNewEvent.js';
 import CurrentDayEvents from './CurrentDayEvents.js';
-import UserContext from '../userContext';
+// import UserContext from '../userContext';
+import { useSelector } from 'react-redux';
 
 
 export default function DayBreakdown 
 ({data, year, month, day, addEvent, deleteEvent, changeEvent, signForEvent, unsignForEvent}) {
-   const user = useContext(UserContext);
+   // const user = useContext(UserContext);
+   const user = {id: useSelector(state => state.user.userId)};
     
    const current = useMemo(() => {
       return data.filter(obj => obj.month === month && obj.day === day && obj.year == year)
