@@ -1,0 +1,42 @@
+td {
+   width: 3rem;
+   height: 3rem;
+   border-color: rgb(126, 125, 125);
+   border-style: solid;
+   border-width: 1px;
+   box-sizing: border-box;
+   text-align: end;
+   padding-right: 0.4rem;
+   font-weight: 500;
+      
+   
+
+}
+
+table {
+   border-collapse: collapse;
+
+}
+.calendar-cell-filled-true {
+   /* background-color: rgb(86, 211, 150); */
+   background-color: #cdccc9;
+
+}
+.calendar-cell-filled-false {
+   border-style: dotted;
+}
+
+.calendar-cell-has-events-true {
+   /* background-color: rgb(64, 114, 90); */
+   background-color: #50689f;
+   color: white;
+}
+
+.calendar-selected-true {
+   border-style:solid;
+   border-color: black;
+   box-sizing: border-box;
+   outline: 3.5px solid rgb(190, 252, 249);
+   outline-offset: -2px;
+   
+}
