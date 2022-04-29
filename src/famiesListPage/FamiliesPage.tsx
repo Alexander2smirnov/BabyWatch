@@ -1,17 +1,16 @@
 import { addDoc, arrayRemove, arrayUnion, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
 import { families, users } from '../firebaseCustom';
-// import UserContext from '../userContext';
 import CreateFamily from "./CreateFamily";
 import FamiliesList from "./FamiliesList";
 import FamiliesPendingInvite from "./FamiliesPendingInvite";
 import './families.css';
 import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 
 
 export default function FamiliesPage () {
-   // const user = useContext (UserContext);
-   const user = {id: useSelector(state => state.user.userId)};
+   const user = {id: useSelector((state: RootState) => state.user.userId)};
    
    const [familiesUserIsIn, setFamiliesUserIsIn] = useState([]);
    const [familierUserInvitedTo, setFamilierUserInvitedTo] = useState([]);
@@ -24,8 +23,8 @@ export default function FamiliesPage () {
    async function getFamilies() {
       const q = query(families, where('users', 'array-contains', doc(users, user.id)));
       const querySnapshot = await getDocs(q);
+      
       setFamiliesUserIsIn(querySnapshot.docs.map(doc => {
-         // console.log(doc.data())
          return {id: doc.id, data: doc.data()}
       }));             
    }
@@ -33,14 +32,13 @@ export default function FamiliesPage () {
    async function getInvites () {
       const q = query(families, where('invited', 'array-contains', doc(users, user.id)));
       const querySnapshot = await getDocs(q);
-      //console.log(querySnapshot);
-      
+       
       setFamilierUserInvitedTo(querySnapshot.docs.map(doc => {
          return {id: doc.id, data: doc.data()}
       }));
    }
 
-   async function createFamily (name='no name') {
+   async function createFamily (name: string = 'no name') {
       try {
          
          await addDoc (families, {name: name, admin: doc(users, user.id), users:[doc(users, user.id)]});
@@ -51,7 +49,7 @@ export default function FamiliesPage () {
       }
    }
 
-   async function deleteFamily (id) {
+   async function deleteFamily(id: string) {
       try {
          await deleteDoc(doc(families, id));
       } catch (e) {
@@ -60,7 +58,7 @@ export default function FamiliesPage () {
       await getFamilies();
    }
 
-   async function inviteReaction(id, answer) {
+   async function inviteReaction(id: string, answer: boolean) {
       const ref = doc(families, id);
       try {
          await updateDoc(ref, {invited: arrayRemove(doc(users,user.id))});

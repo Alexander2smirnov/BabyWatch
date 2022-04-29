@@ -4,24 +4,20 @@ import Nav from './Nav';
 import CalendarPage from './familyData/CalendarPage';
 import Welcome from './Welcome';
 import FamiliesPage from './famiesListPage/FamiliesPage'
-import { auth } from './firebaseCustom.js';
+import { auth, users} from './firebaseCustom';
 import { onAuthStateChanged } from "firebase/auth";
-// import UserContext from './userContext';
 import { doc, setDoc } from 'firebase/firestore';
-import { users } from './firebaseCustom.js';
 import './App.css';
 import { useDispatch, useSelector } from 'react-redux';
+import { RootState, AppDispatch } from './store/store'
 
 
 function App() {
-   const dispatch = useDispatch();
-   const user = {id: useSelector(state => state.user.userId)};
+   const dispatch: AppDispatch = useDispatch();
+   const user = {id: useSelector((state: RootState) => state.user.userId)};
 
-   //const [user, setUser] = useState(null);
-    
    useEffect(() => {
       const authState = onAuthStateChanged(auth, (usr) => {
-         //setUser(usr || null);   
          dispatch({type: 'changeUser', payload: {userId: usr?.uid}})
          if (usr?.uid) {
             setDoc(doc(users, usr.uid), {name: usr.displayName, email: usr.email});
@@ -34,21 +30,19 @@ function App() {
    return (
       <div className="App">
          <Router>
-            {/* <UserContext.Provider value={user}> */}
-               <header className="header">
-                  <Nav/>
-               </header>
-               <main className="main">
-                  <div className='main-container'>
-                     {!user?.id ? 
-                     <Welcome /> : 
-                     <Routes>
-                        <Route path='/' element={<FamiliesPage/>}/>
-                        <Route path='/family/:familyId' element={<CalendarPage />}/>
-                     </Routes>}
-                  </div>
-               </main>
-            {/* </UserContext.Provider>     */}
+            <header className="header">
+               <Nav/>
+            </header>
+            <main className="main">
+               <div className='main-container'>
+                  {!user?.id ? 
+                  <Welcome /> : 
+                  <Routes>
+                     <Route path='/' element={<FamiliesPage/>}/>
+                     <Route path='/family/:familyId' element={<CalendarPage />}/>
+                  </Routes>}
+               </div>
+            </main>
             <footer className='footer'>
             </footer>
          </Router>

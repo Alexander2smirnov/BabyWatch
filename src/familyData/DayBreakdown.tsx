@@ -1,6 +1,6 @@
 import React, { useContext, useMemo, useState }  from 'react';
-import CreateNewEvent from './CreateNewEvent.js';
-import CurrentDayEvents from './CurrentDayEvents.js';
+import CreateNewEvent from './CreateNewEvent';
+import CurrentDayEvents from './CurrentDayEvents';
 // import UserContext from '../userContext';
 import { useSelector } from 'react-redux';
 

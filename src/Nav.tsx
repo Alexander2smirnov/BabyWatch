@@ -1,21 +1,19 @@
 import { signOut } from 'firebase/auth';
-import React, { useContext } from 'react';
+import React from 'react';
 import {useNavigate} from 'react-router-dom'
-// import UserContext from './userContext';
-import {auth} from './firebaseCustom.js';
+import {auth} from './firebaseCustom';
 import { Link } from "react-router-dom";
 import { useSelector } from 'react-redux';
+import { RootState } from './store/store';
 
 
 export default function Nav () {
    const navigate = useNavigate();
-   // const user = useContext(UserContext);
-   const user = {id: useSelector(state => state.user.userId)};
+   const user = {id: useSelector((state: RootState) => state.user.userId)};
 
    async function logOut () {
       await signOut(auth);
       navigate('/');
-      
    }
 
    return <div className='header-wrap'>

@@ -1,13 +1,22 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-// import UserContext from '../userContext';
+import { RootState } from "../store/store";
 
+type Family = {
+   id: string;
+   data: any;     // TODO
+};
 
-export default function FamiliesList({familiesUserIsIn, deleteFamily}) {
-   const [tryDeleteFamily, setTryDeleteFamily] = useState();
-   //const user = useContext(UserContext);
-   const user = {id: useSelector(state => state.user.userId)};
+interface FamiliesListProps {
+   familiesUserIsIn: Family[];
+   deleteFamily: (id: string) => void;
+}
+
+export default function FamiliesList({familiesUserIsIn, deleteFamily}: FamiliesListProps) {
+   const [tryDeleteFamily, setTryDeleteFamily] = useState<string>();
+   const user = {id: useSelector((state: RootState) => state.user.userId)};
+
    return <div className="families-list">
       <ul>
          {familiesUserIsIn.map(family => 

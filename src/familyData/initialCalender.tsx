@@ -1,15 +1,20 @@
+interface DayData {
+   day: null | number;
+   timetable: any[];          //toDo
+   events: number;
+}
 
-export function weekShift(date) {
-   const monthStart = new Date (date.getFullYear(), date.getMonth(), 1);
+export function weekShift(date: Date): number {
+   const monthStart = new Date(date.getFullYear(), date.getMonth(), 1);
    return (monthStart.getDay() + 6)%7;
 } 
 
-export default function initialCalendar (date, days) {
-   const shift = weekShift(date);
+export default function initialCalendar (date: Date, days: number): DayData[][] {
+   const shift: number = weekShift(date);
    const rest = (7 - (shift + days)%7)%7;
    const weekQty = (days + shift + rest)/7;
 
-   const initialCalendar = [];
+   const initialCalendar: DayData[][] = [];
    let day = 1;
    for (let week = 0; week < weekQty; week++) {     
       initialCalendar [week] = [];     
