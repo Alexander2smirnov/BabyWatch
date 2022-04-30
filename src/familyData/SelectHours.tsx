@@ -1,13 +1,18 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 
-export default function SelectHours ({value, setFn}) {
+interface SelectHoursProps {
+   initialValue: string;
+   setFn: Dispatch<SetStateAction<string>>;
+}
+
+export default function SelectHours ({initialValue, setFn}: SelectHoursProps) {
    const hoursArray = [];
    for (let i = 0; i < 24; i++) {
       hoursArray[i] = ((i + 7)%24).toString();
    }   
 
    return <select 
-      value={value} 
+      value={initialValue} 
       onChange={(event) => setFn(event.target.value)}
    >
       {hoursArray.map(hour => <option key={hour} value={hour}>{hour}</option>)}

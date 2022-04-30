@@ -1,10 +1,19 @@
 import React, { useMemo } from 'react';
 import initialCalendar, { weekShift } from './initialCalender';
 import './Calendar.css'
+import { DocumentReference } from 'firebase/firestore';
+import { EventData } from './interfaces';
+
+interface CalendarDraw {
+   data: EventData[];
+   clickHandler: (year: number, month: string, day: number) => void;
+   shiftDate: Date;
+   showDay: number | null;
+}
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-export default function CalendarDraw({data, clickHandler, shiftDate, showDay}) {
+export default function CalendarDraw({data, clickHandler, shiftDate, showDay}: CalendarDraw) {
    const date = shiftDate;
    const month = months[date.getMonth()];
    const year = date.getFullYear();
@@ -32,24 +41,24 @@ export default function CalendarDraw({data, clickHandler, shiftDate, showDay}) {
      
    }, [data, shiftDate]);
 
-   function getWeek (num) {
+   function getWeek (num: number) {
       return Math.floor((num-1 + shift) / 7);
    }
 
-   function getWeekDay (num) {
+   function getWeekDay (num: number) {
       return (num-1 + shift)%7;
    }
 
-   function getDay (week, weekDay) {
+   function getDay (week: number, weekDay: number) {
       return  week*7 + weekDay - shift + 1;
    }
     
-   function daysInMonth (month, year) {
+   function daysInMonth (month: number, year: number) {
       const date = new Date(year, month, 0);
       return date.getDate();
    } 
 
-   function ifShowDay (w, d) {
+   function ifShowDay (w: number, d: number) {
       return (getDay(w, d) === showDay);
    } 
 

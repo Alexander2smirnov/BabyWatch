@@ -1,7 +1,7 @@
 import React from 'react';
 import {useParams, useNavigate} from 'react-router-dom'
 import {useEffect , useState, useContext} from 'react';
-import {addDoc, getDocs, where, query, deleteDoc, doc, getDoc, updateDoc, arrayUnion, setDoc, arrayRemove} from "firebase/firestore";
+import {addDoc, getDocs, where, query, deleteDoc, doc, getDoc, updateDoc, arrayUnion, setDoc, arrayRemove, DocumentReference} from "firebase/firestore";
 import {events, families, users } from '../firebaseCustom';
 // import UserContext from '../userContext';
 import CalendarDraw from './CalendarDraw';
@@ -11,8 +11,14 @@ import './Calendar.css'
 import './calendarPage.css'
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
+import { Day, EventBdData, EventData, FamilyData, FamilyMember } from './interfaces';
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+interface User {
+   name: string;
+   email: string;
+}
 
 export default function CalendarPage() {
    const params = useParams();
@@ -21,13 +27,13 @@ export default function CalendarPage() {
    // const user = useContext(UserContext);
    const user = useSelector((state: RootState) => state.user);
 
-   const [familyMembers, setFamilyMembers] = useState([]);
-   const [familyAdminId, setFamilyAdminId] = useState();
+   const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>([]);
+   const [familyAdminId, setFamilyAdminId] = useState('');
    const [familyName, setFamilyName] = useState('');
-   const [inputNewMemberError, setInputNewMemberError] = useState();
+   const [inputNewMemberError, setInputNewMemberError] = useState('');
    
-   const [data, setData] = useState([]);
-   const [showDay, setShowDay] = useState();
+   const [data, setData] = useState<EventData[]>([]);
+   const [showDay, setShowDay] = useState<Day | null>(null);
    const [date, setDate] = useState(new Date());
    
    const monthNum = date.getMonth();
@@ -48,45 +54,50 @@ export default function CalendarPage() {
       const querySnapshot = await getDocs(q);
 
       setData(await Promise.all(querySnapshot.docs.map(async (docSnapshot) => {
-         const eventData = docSnapshot.data();
+         const eventData = docSnapshot.data() as EventBdData;
+         const dataCreatorPromise = eventData.creator ? getDoc(eventData.creator) : null;
+         const dataSignedByPromise = eventData.signedBy ? getDoc(eventData.signedBy) : null;
          return {
             id: docSnapshot.id, 
             ...eventData, 
-            creatorName: !eventData.creator ? null : (await getDoc(eventData.creator)).data().name,
-            creatorId: eventData.creator?.id,
-            signedByName: !eventData.signedBy ? null : (await getDoc(eventData.signedBy)).data().name,
-            signedById: eventData.signedBy?.id,            
+            creatorName: dataCreatorPromise ? ((await dataCreatorPromise).data() as User).name : null,
+            creatorId: eventData.creator ? eventData.creator.id : null,
+            signedByName: dataSignedByPromise ? ((await dataSignedByPromise).data() as User).name : null,
+            signedById: eventData.signedBy ? eventData.signedBy.id : null,
          };
       })));
    }
 
    async function getFamily() {
       const querySnapshot = await getDoc(doc(families, params.familyId));
-      const familyRefs = querySnapshot.data().users;
+      const familyData = querySnapshot.data() as FamilyData;
+      const familyRefs = familyData.users;
       
-      setFamilyName(querySnapshot.data().name);
-      setFamilyAdminId(querySnapshot.data().admin.id);
+      setFamilyName(familyData.name);
+      setFamilyAdminId(familyData.admin.id);
       setFamilyMembers(await Promise.all(familyRefs.map(async (userRef) => {
-         const userData = (await getDoc(userRef)).data();
+         const userData = (await getDoc(userRef)).data() as FamilyMember;
          return {name: userData.name, email: userData.email, id: userRef.id};
       })));
    }
 
-   function monthChange(num) {
+   function monthChange(num: number) {
       const newDate = new Date(date.getTime());
       newDate.setMonth(newDate.getMonth() + num);
       setDate(newDate);
       setShowDay(null);
    }
       
-   function cellClickHandler(year, month, day) {
+   function cellClickHandler(year: number, month: string, day: number) {
       setShowDay({year, month, day});
    }   
 
-   async function addEvent(year, month, day, timeStart, timeEnd, title) {
+   async function addEvent
+      (year: number, month: string, day: number, timeStart: string, timeEnd: string, title: string) 
+   {
       const newEvent = {
          familyId: params.familyId,
-         creator: doc(users, user.id),
+         creator: doc(users, user?.id),
          year,
          month,
          day,
@@ -104,20 +115,21 @@ export default function CalendarPage() {
       getEvents();
    }
 
-   async function changeEvent(id, timeStart, timeEnd, title) {
-      const newObj = {};
-      if (title) newObj.title = title;
-      if (timeStart) newObj.timeStart = timeStart;
-      if (timeEnd) newObj.timeEnd = timeEnd;
+   async function changeEvent(id: string, timeStart: string, timeEnd: string, title: string) {
+      const newEventData: {[key: string]: string} = {};
+      
+      if (title) newEventData.title = title;
+      if (timeStart) newEventData.timeStart = timeStart;
+      if (timeEnd) newEventData.timeEnd = timeEnd;
       try { 
-         await setDoc(doc(events, id), newObj, {merge:true});
+         await setDoc(doc(events, id), newEventData, {merge:true});
       } catch (e) {
          console.error("Error changing event: ", e);
       }  
       getEvents();
    }
 
-   async function deleteEvent(id) {
+   async function deleteEvent(id: string) {
       try {
          await deleteDoc(doc(events, id));
       } catch (e) {
@@ -126,7 +138,7 @@ export default function CalendarPage() {
       getEvents();
    }
 
-   async function addNewFamilyMember(str) {
+   async function addNewFamilyMember(str: string) {
       const email = str.trim();
       const q = query(users, where('email', '==', email)); 
          
@@ -144,19 +156,19 @@ export default function CalendarPage() {
       }
    }
 
-   async function removeFamilyMember(member) {
+   async function removeFamilyMember(member: FamilyMember) {
       const memberRef = doc(users, member.id);
       await updateDoc(doc(families, params.familyId), {users: arrayRemove(memberRef)});
-      if (member.id === user.id) navigate('/');
+      if (member.id === user?.id) navigate('/');
       else getFamily();
    }
 
-   async function signForEvent(eventId) {
-      await setDoc(doc(events, eventId), {signedBy: doc(users, user.id)}, {merge:true});
+   async function signForEvent(eventId: string) {
+      await setDoc(doc(events, eventId), {signedBy: doc(users, user?.id)}, {merge:true});
       getEvents();
    }
    
-   async function unsignForEvent(eventId) {
+   async function unsignForEvent(eventId: string) {
       await setDoc(doc(events, eventId), {signedBy: null}, {merge:true});
       getEvents();
    }
@@ -188,7 +200,7 @@ export default function CalendarPage() {
             data={data}
             clickHandler={cellClickHandler}
             shiftDate={date}
-            showDay={showDay?.day}
+            showDay={showDay?.day || null}
          />
       </div>
       {showDay ? <DayBreakdown 

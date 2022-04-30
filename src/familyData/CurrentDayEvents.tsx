@@ -1,11 +1,22 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { Dispatch, KeyboardEvent, SetStateAction, useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
+import { EventData } from "./interfaces";
 // import UserContext from "../userContext";
 import SelectHours from "./SelectHours";
 import SelectMinutes from "./SelectMinutes";
 
-export default function CurrentDayEvents({data, deleteEvent, changeEvent, signForEvent, unsignForEvent}) {
+interface CurrentDayEventsProps {
+   data: EventData[];
+   deleteEvent: (id: string) => void; 
+   changeEvent: (id: string, timeStart: string, timeEnd: string, title: string) => void;
+   signForEvent: (id: string) => void;
+   unsignForEvent: (id: string) => void;
+}
+
+export default function CurrentDayEvents(
+   {data, deleteEvent, changeEvent, signForEvent, unsignForEvent}: CurrentDayEventsProps
+) {
    // const user = useContext(UserContext);
    const user = useSelector((state: RootState) => state.user);
 
@@ -15,24 +26,34 @@ export default function CurrentDayEvents({data, deleteEvent, changeEvent, signFo
    const [changeMinuteStart, setChangeMinuteStart] = useState('');
    const [changeMinuteEnd, setChangeMinuteEnd] = useState('');
    
-   const [eventToChange, setEventToChange] = useState();
+   const [eventToChange, setEventToChange] = useState<EventData | null>(null);
 
-   useEffect(() => setEventToChange(), [data]);   
+   useEffect(() => setEventToChange(null), [data]);   
 
-   function changeEventHandler(event, obj, setFn) {
-      if (event.key === 'Enter' || event.key === undefined) {
+   function keyUpHandler(e: KeyboardEvent, event: EventData, setFn: Dispatch<SetStateAction<string>>) {
+      if (e.key === 'Enter') {
+         submitChanges(event);         
+      }
+      if (e.key === 'Escape') setFn('');
+   }
+
+   function submitChanges(event: EventData) {
+      if (changeTitle.trim()) {
          const timeStart = changeHourStart + ':' + changeMinuteStart;
          const timeEnd = changeHourEnd + ':' + changeMinuteEnd;
-         
-         changeEvent(obj.id, timeStart, timeEnd, changeTitle);
-         setChangeTitle('');
-         setChangeHourStart('7');
-         setChangeMinuteStart('00');
-         setChangeHourEnd('10');
-         setChangeMinuteEnd('00')
-         setEventToChange(null);
+         changeEvent(event.id, timeStart, timeEnd, changeTitle);
+         resetChangeStates();
       }
-      if (event.key === 'Escape') setFn('');
+
+   }
+
+   function resetChangeStates() {
+      setChangeTitle('');
+      setChangeHourStart('7');
+      setChangeMinuteStart('00');
+      setChangeHourEnd('10');
+      setChangeMinuteEnd('00')
+      setEventToChange(null);
    }
 
    return <div>
@@ -44,39 +65,40 @@ export default function CurrentDayEvents({data, deleteEvent, changeEvent, signFo
          <span>
             {event.title}, {event.timeStart} - {event.timeEnd}, {'created by ' + event.creatorName}  
          </span>
-         {user.id === event.creatorId && 
+         {user?.id === event.creatorId && 
          <span>
             {event === eventToChange && 
             <span>  
                <input
                   placeholder={'New title'}
                   onChange={(e) => setChangeTitle(e.target.value)}
-                  onKeyUp={(e) => changeEventHandler(e, event, setChangeTitle)}
+                  onKeyUp={(e) => keyUpHandler(e, event, setChangeTitle)}
                   value={changeTitle}
                />
                <SelectHours
-                  value={changeHourStart}
+                  initialValue={changeHourStart}
                   setFn={setChangeHourStart}
                />
                <SelectMinutes
-                  value={changeMinuteStart}
+                  initialValue={changeMinuteStart}
                   setFn={setChangeMinuteStart}
                />
                <SelectHours
-                  value={changeHourEnd}
+                  initialValue={changeHourEnd}
                   setFn={setChangeHourEnd}
                />
                <SelectMinutes
-                  value={changeMinuteEnd}
+                  initialValue={changeMinuteEnd}
                   setFn={setChangeMinuteEnd}
                />
                <button
                   className="calendar-page__event-button"
-                  onClick={(e) => changeEventHandler(e, event)}
+                  onClick={(e) => submitChanges(event)}
                >
                   Submit
                </button>
             </span>}
+
             {event !== eventToChange &&
             <span>
                <button
@@ -106,7 +128,7 @@ export default function CurrentDayEvents({data, deleteEvent, changeEvent, signFo
          {event.signedBy ? 
          <>
             <span> signed by {event.signedByName}</span> 
-            {event.signedById === user.id && 
+            {event.signedById === user?.id && 
             <button
                className="calendar-page__event-button"
                onClick={() => unsignForEvent(event.id)}
@@ -115,7 +137,7 @@ export default function CurrentDayEvents({data, deleteEvent, changeEvent, signFo
             </button>}
          </>
          : 
-         user.id !== event.creatorId && 
+         user?.id !== event.creatorId && 
          <button
             className="calendar-page__event-button"
             onClick={() => signForEvent(event.id)}

@@ -1,35 +1,43 @@
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, KeyboardEvent, SetStateAction, useEffect, useState } from "react";
 import SelectMinutes from "./SelectMinutes";
 import SelectHours from "./SelectHours";
 
-export default function CreateNewEvent({year, month, day, addEvent}) {
+interface createEventProps {
+   year: number;
+   month: string;
+   day: number;
+   addEvent: (year: number, month: string, day: number, timeStart: string, timeEnd: string, title: string) => void;
+}
+
+export default function CreateNewEvent({year, month, day, addEvent}: createEventProps) {
    const [inputTitle, setInputTitle] = useState('');
    const [inputHourStart, setInputHourStart] = useState('');
    const [inputMinuteStart, setInputMinuteStart] = useState('');
    const [inputHourEnd, setInputHourEnd] = useState('');
    const [inputMinuteEnd, setInputMinuteEnd] = useState('');
 
-   useEffect(() => {
+   function reset() {
       setInputTitle('');
       setInputHourStart('7');
       setInputMinuteStart('00');
       setInputHourEnd('10');
       setInputMinuteEnd('00')
-   }, [year, month, day]);
+   }
 
-   function changeInputHandler(event, setFn) {
-      if ((event.key === 'Enter' || event.key === undefined) && inputTitle.trim()) {
+   useEffect(() => reset(), [year, month, day]);
+
+   function submitChanges() {
+      if (inputTitle.trim()) {
          const timeStart = inputHourStart + ":" + inputMinuteStart;
          const timeEnd = inputHourEnd + ":" + inputMinuteEnd;
          addEvent(year, month, day, timeStart, timeEnd, inputTitle); 
-         
-         setInputTitle('');
-         setInputHourStart('7');
-         setInputMinuteStart('00');
-         setInputHourEnd('10');
-         setInputMinuteEnd('00')
+         reset();
       }
+   }
+
+   function keyUpHandler(event: KeyboardEvent, setFn: Dispatch<SetStateAction<string>>) {
       if (event.key === 'Escape') setFn('');
+      if (event.key === 'Enter') submitChanges();
    }
 
    return <div>
@@ -38,26 +46,26 @@ export default function CreateNewEvent({year, month, day, addEvent}) {
          type='text'
          onChange={event => setInputTitle(event.target.value)}
          value={inputTitle}
-         onKeyUp={(event) => changeInputHandler(event, setInputTitle)}
+         onKeyUp={(event) => keyUpHandler(event, setInputTitle)}
       />
       <SelectHours 
-         value={inputHourStart}
+         initialValue={inputHourStart}
          setFn={setInputHourStart}
       />
       <SelectMinutes 
-         value={inputMinuteStart}
+         initialValue={inputMinuteStart}
          setFn={setInputMinuteStart}
       />   
       <SelectHours 
-         value={inputHourEnd}
+         initialValue={inputHourEnd}
          setFn={setInputHourEnd}
       />
       <SelectMinutes 
-         value={inputMinuteEnd}
+         initialValue={inputMinuteEnd}
          setFn={setInputMinuteEnd}
       />
       <button
-         onClick={(event) => changeInputHandler(event)}
+         onClick={(event) => submitChanges()}
       >
          Submit
       </button>

@@ -44,7 +44,11 @@ export default function FamiliesPage() {
    async function createFamily(name: string = 'no name') {
       try {  
          if (user) {
-            await addDoc(families, {name: name, admin: doc(users, user.id), users: [doc(users, user.id)]});
+            await addDoc(families, {
+               name: name, 
+               admin: doc(users, user.id), 
+               users: [doc(users, user.id)],
+            });
             await getFamilies();
          }
       } catch (e) {

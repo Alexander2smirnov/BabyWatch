@@ -1,9 +1,14 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 
-export default function SelectMinutes({value, setFn}) {
+interface SelectMinutesProps {
+   initialValue: string;
+   setFn: Dispatch<SetStateAction<string>>;
+}
+
+export default function SelectMinutes({initialValue, setFn}: SelectMinutesProps) {
 
    return <select 
-      value={value} 
+      value={initialValue} 
       onChange={(event) => setFn(event.target.value)}
    >
       <option value='00'>00</option>

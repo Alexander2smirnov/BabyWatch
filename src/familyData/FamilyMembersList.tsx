@@ -1,18 +1,29 @@
-import React, { useContext, useState } from "react";
+import React, { FormEvent, useContext, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
+import { FamilyMember } from "./interfaces";
 // import UserContext from "../userContext";
 
-export default function FamilyMembersList
-({familyName, familyAdminId, familyMembers, addNewFamilyMember, removeFamilyMember, inputNewMemberError}) {
+
+interface FamilyMembersListProps {
+   familyName: string;
+   familyAdminId: string;
+   familyMembers: FamilyMember[];
+   addNewFamilyMember: (email: string) => void
+   removeFamilyMember: (familyMember: FamilyMember) => void;
+   inputNewMemberError: string;
+
+}
+
+export default function FamilyMembersList(
+   {familyName, familyAdminId, familyMembers, addNewFamilyMember, removeFamilyMember, inputNewMemberError}: FamilyMembersListProps
+) {
    // const user = useContext(UserContext);
    const user = useSelector((state: RootState) => state.user);
-
    const [inputNewMember, setInputNewMember] = useState('');
    
-   function submitHandler (event) {
+   function submitHandler (event: FormEvent) {
       event.preventDefault();
-      
       addNewFamilyMember(inputNewMember);
       setInputNewMember('');
       
@@ -28,7 +39,7 @@ export default function FamilyMembersList
                   key={'li ' + member.id}
                >
                   {member.name}, {member.email}
-                  {user.id === familyAdminId && 
+                  {user?.id === familyAdminId && 
                   member.id !== familyAdminId && 
                   <button 
                      className='calendar-page__kick-member-button'
@@ -36,8 +47,8 @@ export default function FamilyMembersList
                   >
                      Kick
                   </button>}
-                  {user.id !== familyAdminId && 
-                  user.id === member.id && 
+                  {user?.id !== familyAdminId && 
+                  user?.id === member.id && 
                   <button
                      className='calendar-page__kick-member-button'
                      key={'leave ' + member.id}
