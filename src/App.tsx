@@ -14,18 +14,18 @@ import { RootState, AppDispatch } from './store/store'
 
 function App() {
    const dispatch: AppDispatch = useDispatch();
-   const user = {id: useSelector((state: RootState) => state.user.userId)};
+   const user = useSelector((state: RootState) => state.user);
 
    useEffect(() => {
       const authState = onAuthStateChanged(auth, (usr) => {
-         dispatch({type: 'changeUser', payload: {userId: usr?.uid}})
-         if (usr?.uid) {
+         if (!usr) dispatch({type: 'logOut', payload: null});
+         else {
+            dispatch({type: 'logIn', payload: {id: usr.uid}});
             setDoc(doc(users, usr.uid), {name: usr.displayName, email: usr.email});
          }
       });
-
-      return () => {authState()}
-   }, [])
+      return () => {authState()};
+   }, []);
 
    return (
       <div className="App">

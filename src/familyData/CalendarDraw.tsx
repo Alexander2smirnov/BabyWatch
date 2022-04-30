@@ -4,7 +4,7 @@ import './Calendar.css'
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-export default function CalendarDraw ({data, clickHandler, shiftDate, showDay}) {
+export default function CalendarDraw({data, clickHandler, shiftDate, showDay}) {
    const date = shiftDate;
    const month = months[date.getMonth()];
    const year = date.getFullYear();
@@ -56,7 +56,7 @@ export default function CalendarDraw ({data, clickHandler, shiftDate, showDay}) 
    return <div>    
       <table>
          <tbody>
-        {calendar.map((tr, w) => { return (
+         {calendar.map((tr, w) => { return (
             <tr key={w}>
                {tr.map((td, d) => 
                   <td 

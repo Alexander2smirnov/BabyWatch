@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function SelectMinutes ({value, setFn}) {
+export default function SelectMinutes({value, setFn}) {
 
    return <select 
       value={value} 

@@ -1,6 +1,12 @@
 import React from "react";
+import { DocData } from "../firebaseCustom";
 
-export default function FamiliesPendingInvite({familierUserInvitedTo, inviteReaction}) {
+interface FamiliesPending {
+   familierUserInvitedTo: DocData[];
+   inviteReaction: (id: string, answer: boolean) => void;
+}
+
+export default function FamiliesPendingInvite({familierUserInvitedTo, inviteReaction}: FamiliesPending) {
    return <div>
       <ul>
          {familierUserInvitedTo.map(family => 
@@ -20,8 +26,7 @@ export default function FamiliesPendingInvite({familierUserInvitedTo, inviteReac
                      Decline
                   </button>
                </span>
-            </div>
-               
+            </div>   
          </li>)}
       </ul>
    </div>

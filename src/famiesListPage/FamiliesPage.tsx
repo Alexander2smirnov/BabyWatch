@@ -1,6 +1,6 @@
 import { addDoc, arrayRemove, arrayUnion, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import React, { useContext, useEffect, useState } from "react";
-import { families, users } from '../firebaseCustom';
+import { DocData, families, users } from '../firebaseCustom';
 import CreateFamily from "./CreateFamily";
 import FamiliesList from "./FamiliesList";
 import FamiliesPendingInvite from "./FamiliesPendingInvite";
@@ -8,42 +8,45 @@ import './families.css';
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 
+export default function FamiliesPage() {
+   const user = useSelector((state: RootState) => state.user);
 
-export default function FamiliesPage () {
-   const user = {id: useSelector((state: RootState) => state.user.userId)};
-   
-   const [familiesUserIsIn, setFamiliesUserIsIn] = useState([]);
-   const [familierUserInvitedTo, setFamilierUserInvitedTo] = useState([]);
+   const [familiesUserIsIn, setFamiliesUserIsIn] = useState<DocData[]>([]);
+   const [familierUserInvitedTo, setFamilierUserInvitedTo] = useState<DocData[]>([]);
    
    useEffect(() => {
       getFamilies();
       getInvites();   
-   }, [user])
+   }, [user]);
    
    async function getFamilies() {
-      const q = query(families, where('users', 'array-contains', doc(users, user.id)));
-      const querySnapshot = await getDocs(q);
-      
-      setFamiliesUserIsIn(querySnapshot.docs.map(doc => {
-         return {id: doc.id, data: doc.data()}
-      }));             
-   }
-
-   async function getInvites () {
-      const q = query(families, where('invited', 'array-contains', doc(users, user.id)));
-      const querySnapshot = await getDocs(q);
-       
-      setFamilierUserInvitedTo(querySnapshot.docs.map(doc => {
-         return {id: doc.id, data: doc.data()}
-      }));
-   }
-
-   async function createFamily (name: string = 'no name') {
-      try {
+      if (user) {
+         const q = query(families, where('users', 'array-contains', doc(users, user.id)));
+         const querySnapshot = await getDocs(q);
          
-         await addDoc (families, {name: name, admin: doc(users, user.id), users:[doc(users, user.id)]});
-         await getFamilies();
+         setFamiliesUserIsIn(querySnapshot.docs.map(doc => {
+            return {id: doc.id, data: doc.data()}
+         }));  
+      }           
+   }
 
+   async function getInvites() {
+      if (user) {
+         const q = query(families, where('invited', 'array-contains', doc(users, user.id)));
+         const querySnapshot = await getDocs(q);
+         
+         setFamilierUserInvitedTo(querySnapshot.docs.map(doc => {
+            return {id: doc.id, data: doc.data()}
+         }));
+      }
+   }
+
+   async function createFamily(name: string = 'no name') {
+      try {  
+         if (user) {
+            await addDoc(families, {name: name, admin: doc(users, user.id), users: [doc(users, user.id)]});
+            await getFamilies();
+         }
       } catch (e) {
          console.error("Error making family: ", e);
       }
@@ -61,14 +64,16 @@ export default function FamiliesPage () {
    async function inviteReaction(id: string, answer: boolean) {
       const ref = doc(families, id);
       try {
-         await updateDoc(ref, {invited: arrayRemove(doc(users,user.id))});
-         if (answer) {
-            await updateDoc(ref, {users: arrayUnion(doc(users, user.id))});
-            getFamilies();
+         if (user) {
+            await updateDoc(ref, {invited: arrayRemove(doc(users, user.id))});
+            if (answer) {
+               await updateDoc(ref, {users: arrayUnion(doc(users, user.id))});
+               getFamilies();
+            }
+            getInvites();
          }
-         getInvites();
       } catch (e) {
-         console.log('error accepting invite ', e)
+         console.log('error accepting invite ', e);
       }   
    }
 
@@ -79,6 +84,7 @@ export default function FamiliesPage () {
          familiesUserIsIn={familiesUserIsIn}
          deleteFamily={deleteFamily}
       />
+
       {!!familierUserInvitedTo.length && 
       <h2>You are invited:</h2>}
       <FamiliesPendingInvite 
@@ -89,6 +95,5 @@ export default function FamiliesPage () {
       <CreateFamily
          createFamily={createFamily}
       />
-   </>
-
+   </>;
 }

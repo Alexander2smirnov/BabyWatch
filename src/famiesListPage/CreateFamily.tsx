@@ -1,21 +1,26 @@
-import React, { useState } from "react";
+import React, { KeyboardEvent, useState } from "react";
 
-export default function CreateFamily({createFamily}) {
+interface CreateFamilyProps {
+   createFamily: (name: string) => void;
+}
+
+export default function CreateFamily({createFamily}: CreateFamilyProps) {
    const [inputFamilyName, setInputFamilyName] = useState('');
    const [creatingFamily, setCreatingFamily] = useState(false);
 
-   function keyUpHandler(event) {
-      if (!inputFamilyName.trim()) return;
-      
-      if (event.key === 'Enter' || event.key === undefined) {
-         createFamily(inputFamilyName); 
-         setInputFamilyName('');
-         setCreatingFamily(false);
-      }
+   function keyUpHandler(event: KeyboardEvent) {
       if (event.key === 'Escape') {
          setInputFamilyName('');
          setCreatingFamily(false);
       }
+   }
+
+   function onSubmit() {
+      if (!inputFamilyName.trim()) return;
+      
+      createFamily(inputFamilyName); 
+      setInputFamilyName('');
+      setCreatingFamily(false);
    }
    
    return <div className="create-family">
@@ -28,6 +33,12 @@ export default function CreateFamily({createFamily}) {
 
       {creatingFamily && 
       <>
+      <form
+         onSubmit={(event) => {
+            event.preventDefault();
+            onSubmit();
+         }}
+      >
          <input
             placeholder={'Enter family name'}
             onChange={(event) => setInputFamilyName(event.target.value)}
@@ -35,10 +46,11 @@ export default function CreateFamily({createFamily}) {
             value={inputFamilyName}
          />
          <button
-            onClick={event => keyUpHandler(event)}
+            type="submit"
          >
             Create family   
          </button>
+      </form>
       </>}
    </div>
 }

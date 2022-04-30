@@ -1,9 +1,9 @@
 interface State {
-   user: User;
+   user: User | null;
 }
 
-interface User {
-   userId: string;
+export interface User {
+   id: string;
 }
 
 interface Action {
@@ -12,19 +12,20 @@ interface Action {
 }
 
 interface Payload {
-   userId: string;
+   id: string;
 }
 
 const defaultState = {
-   user: {
-      userId: null,
-   },   
+   user: null,
 };
 
-export default function userReducer (state: State = defaultState, action: Action) {
+export default function userReducer(state: State = defaultState, action: Action): State {
    switch (action.type) {
-      case 'changeUser':
-         return {...state, user: {...state.user, userId: action.payload?.userId}};
+      case 'logIn':
+         return {...state, user: {...state.user, id: (action.payload as Payload)?.id}};
+         
+      case 'logOut':
+         return {...state, user: null};
 
       default: return state;
    }

@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 // import UserContext from "../userContext";
 import SelectHours from "./SelectHours";
 import SelectMinutes from "./SelectMinutes";
 
 export default function CurrentDayEvents({data, deleteEvent, changeEvent, signForEvent, unsignForEvent}) {
    // const user = useContext(UserContext);
-   const user = {id: useSelector(state => state.user.userId)};
-   
+   const user = useSelector((state: RootState) => state.user);
+
    const [changeTitle, setChangeTitle] = useState('');
    const [changeHourStart, setChangeHourStart] = useState('');
    const [changeHourEnd, setChangeHourEnd] = useState('');

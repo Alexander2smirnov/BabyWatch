@@ -10,6 +10,7 @@ import DayBreakdown from './DayBreakdown';
 import './Calendar.css'
 import './calendarPage.css'
 import { useSelector } from 'react-redux';
+import { RootState } from '../store/store';
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -18,7 +19,7 @@ export default function CalendarPage() {
    const navigate = useNavigate();
 
    // const user = useContext(UserContext);
-   const user = {id: useSelector(state => state.user.userId)};
+   const user = useSelector((state: RootState) => state.user);
 
    const [familyMembers, setFamilyMembers] = useState([]);
    const [familyAdminId, setFamilyAdminId] = useState();

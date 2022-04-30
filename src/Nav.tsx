@@ -9,7 +9,7 @@ import { RootState } from './store/store';
 
 export default function Nav () {
    const navigate = useNavigate();
-   const user = {id: useSelector((state: RootState) => state.user.userId)};
+   const user = useSelector((state: RootState) => state.user);
 
    async function logOut () {
       await signOut(auth);

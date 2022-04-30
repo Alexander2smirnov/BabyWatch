@@ -1,12 +1,13 @@
 import React, { useContext, useState } from "react";
 import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 // import UserContext from "../userContext";
 
 export default function FamilyMembersList
 ({familyName, familyAdminId, familyMembers, addNewFamilyMember, removeFamilyMember, inputNewMemberError}) {
    // const user = useContext(UserContext);
-   const user = {id: useSelector(state => state.user.userId)};
-   
+   const user = useSelector((state: RootState) => state.user);
+
    const [inputNewMember, setInputNewMember] = useState('');
    
    function submitHandler (event) {
