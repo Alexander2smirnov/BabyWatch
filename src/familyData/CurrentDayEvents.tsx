@@ -1,6 +1,7 @@
 import React, { Dispatch, KeyboardEvent, SetStateAction, useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
+import ChangeEvent from "./ChangeEvent";
 import { EventData } from "./interfaces";
 // import UserContext from "../userContext";
 import SelectHours from "./SelectHours";
@@ -19,115 +20,39 @@ export default function CurrentDayEvents(
 ) {
    // const user = useContext(UserContext);
    const user = useSelector((state: RootState) => state.user);
-
-   const [changeTitle, setChangeTitle] = useState('');
-   const [changeHourStart, setChangeHourStart] = useState('');
-   const [changeHourEnd, setChangeHourEnd] = useState('');
-   const [changeMinuteStart, setChangeMinuteStart] = useState('');
-   const [changeMinuteEnd, setChangeMinuteEnd] = useState('');
    
    const [eventToChange, setEventToChange] = useState<EventData | null>(null);
 
    useEffect(() => setEventToChange(null), [data]);   
 
-   function keyUpHandler(e: KeyboardEvent, event: EventData, setFn: Dispatch<SetStateAction<string>>) {
-      if (e.key === 'Enter') {
-         submitChanges(event);         
-      }
-      if (e.key === 'Escape') setFn('');
+   function submitChanges(event: EventData, timeStart: string, timeEnd: string, title: string) {
+      if (title.trim()) changeEvent(event.id, timeStart, timeEnd, title);
    }
 
-   function submitChanges(event: EventData) {
-      if (changeTitle.trim()) {
-         const timeStart = changeHourStart + ':' + changeMinuteStart;
-         const timeEnd = changeHourEnd + ':' + changeMinuteEnd;
-         changeEvent(event.id, timeStart, timeEnd, changeTitle);
-         resetChangeStates();
-      }
-
-   }
-
-   function resetChangeStates() {
-      setChangeTitle('');
-      setChangeHourStart('7');
-      setChangeMinuteStart('00');
-      setChangeHourEnd('10');
-      setChangeMinuteEnd('00')
+   function discardChanges() {
       setEventToChange(null);
    }
 
-   return <div>
+   return <ul>
       {data.map(event => 
-      <div 
+      <li 
          className='calendar-page__event'
          key={event.title}
-      >   
-         <span>
-            {event.title}, {event.timeStart} - {event.timeEnd}, {'created by ' + event.creatorName}  
-         </span>
-         {user?.id === event.creatorId && 
-         <span>
-            {event === eventToChange && 
-            <span>  
-               <input
-                  placeholder={'New title'}
-                  onChange={(e) => setChangeTitle(e.target.value)}
-                  onKeyUp={(e) => keyUpHandler(e, event, setChangeTitle)}
-                  value={changeTitle}
-               />
-               <SelectHours
-                  initialValue={changeHourStart}
-                  setFn={setChangeHourStart}
-               />
-               <SelectMinutes
-                  initialValue={changeMinuteStart}
-                  setFn={setChangeMinuteStart}
-               />
-               <SelectHours
-                  initialValue={changeHourEnd}
-                  setFn={setChangeHourEnd}
-               />
-               <SelectMinutes
-                  initialValue={changeMinuteEnd}
-                  setFn={setChangeMinuteEnd}
-               />
-               <button
-                  className="calendar-page__event-button"
-                  onClick={(e) => submitChanges(event)}
-               >
-                  Submit
-               </button>
-            </span>}
+      >  
+         <div
+            className="calendar-page__event-info-and-buttons"
+         > 
+            <div
+               className='calendar-page__event-info'
+               onClick={() => {if (user?.id === event.creatorId) setEventToChange(event)}}
+            >
+               {event !== eventToChange && 
+               <>{event.title + ', ' + event.timeStart + ' - ' + event.timeEnd + ', by ' + event.creatorName} 
+               {event.signedBy && <> signed by {event.signedByName}</>}</>}
+               
+               
+            </div>
 
-            {event !== eventToChange &&
-            <span>
-               <button
-                  className="calendar-page__event-button"
-                  onClick={(e) => {
-                     setEventToChange(event);
-                     setChangeTitle(event.title);
-                     const [hourStart, minuteStart] = event.timeStart.split(":");
-                     const [hourEnd, minuteEnd] = event.timeEnd.split(":");
-                     setChangeHourStart(hourStart || '7');
-                     setChangeHourEnd(hourEnd || '10');
-                     setChangeMinuteStart(minuteStart || '00');
-                     setChangeMinuteEnd(minuteEnd || '00');
-                  }}
-               >
-               Change
-               </button>
-               <button
-                  className="calendar-page__event-button"
-                  onClick={() => deleteEvent(event.id)}
-               >
-                  Delete
-               </button>
-            </span>}
-         </span>}
-         
-         {event.signedBy ? 
-         <>
-            <span> signed by {event.signedByName}</span> 
             {event.signedById === user?.id && 
             <button
                className="calendar-page__event-button"
@@ -135,15 +60,41 @@ export default function CurrentDayEvents(
             >
                Unsign   
             </button>}
-         </>
-         : 
-         user?.id !== event.creatorId && 
-         <button
-            className="calendar-page__event-button"
-            onClick={() => signForEvent(event.id)}
-         >
-            Sign for the event
-         </button>}
-      </div>)}
-   </div>
+             
+            {!event.signedBy && user?.id !== event.creatorId && 
+            <button
+               className="calendar-page__event-button"
+               onClick={() => signForEvent(event.id)}
+            >
+               Sign for the event
+            </button>}
+
+            {user?.id === event.creatorId && event !== eventToChange &&
+            <div 
+            className="calendar-page__event-edit-buttons-wrap">
+               <button
+                  className="calendar-page__event-button"
+                  onClick={(e) => setEventToChange(event)}
+               >
+               Change
+               </button>
+
+               <button
+                  className="calendar-page__event-button"
+                  onClick={(e) => deleteEvent(event.id)}
+               >
+                  Delete
+               </button>
+            </div>}
+         </div>
+         <div>
+            {event === eventToChange && 
+            <ChangeEvent
+               submitChanges={submitChanges}
+               discardChanges={discardChanges}
+               event={event}
+            />}
+         </div>
+      </li>)}
+   </ul>
 }

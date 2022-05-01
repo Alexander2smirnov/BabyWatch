@@ -40,30 +40,42 @@ export default function CreateNewEvent({year, month, day, addEvent}: createEvent
       if (event.key === 'Enter') submitChanges();
    }
 
-   return <div>
-      <input
-         placeholder='Enter event title'
-         type='text'
-         onChange={event => setInputTitle(event.target.value)}
-         value={inputTitle}
-         onKeyUp={(event) => keyUpHandler(event, setInputTitle)}
-      />
-      <SelectHours 
-         initialValue={inputHourStart}
-         setFn={setInputHourStart}
-      />
-      <SelectMinutes 
-         initialValue={inputMinuteStart}
-         setFn={setInputMinuteStart}
-      />   
-      <SelectHours 
-         initialValue={inputHourEnd}
-         setFn={setInputHourEnd}
-      />
-      <SelectMinutes 
-         initialValue={inputMinuteEnd}
-         setFn={setInputMinuteEnd}
-      />
+   return <div
+      className="calendar-page__event-wrap"
+   >
+      <div
+      className="calendar-page__event-inputs-wrap"
+      >
+         <input
+            className="calendar-page__input-event-title"
+            placeholder='Enter event title'
+            type='text'
+            onChange={event => setInputTitle(event.target.value)}
+            value={inputTitle}
+            onKeyUp={(event) => keyUpHandler(event, setInputTitle)}
+         />
+         <div
+            className='calendar-page__selects-wrap'
+         >
+            <SelectHours 
+               initialValue={inputHourStart}
+               setFn={setInputHourStart}
+            />
+            <SelectMinutes 
+               initialValue={inputMinuteStart}
+               setFn={setInputMinuteStart}
+            />   
+            {' : '}
+            <SelectHours 
+               initialValue={inputHourEnd}
+               setFn={setInputHourEnd}
+            />
+            <SelectMinutes 
+               initialValue={inputMinuteEnd}
+               setFn={setInputMinuteEnd}
+            />
+         </div>
+      </div>
       <button
          onClick={(event) => submitChanges()}
       >

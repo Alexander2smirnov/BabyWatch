@@ -10,9 +10,45 @@
 
 .calendar-page__event {
    display: flex;
-   width: 50rem;
-   justify-content: space-between;
+   flex-direction: column;
+   width: 100%;
    margin-bottom: 0.5rem;
+}
+
+.calendar-page__event-info-and-buttons {
+   display: flex;
+   justify-content: space-between;
+}
+
+.calendar-page__selects-wrap {
+   display: inline-block;
+   
+}
+
+.calendar-page__event-inputs-wrap {
+   display: inline-block;
+   
+}
+
+.calendar-page__event-wrap {
+   display: flex;
+   justify-content: space-between;
+   flex-wrap: wrap
+}
+
+
+.calendar-page__input-event-title {
+   margin-right: 0.4rem;
+
+}
+.calendar-page__event-info {
+   padding-right: 1rem;
+
+
+}
+
+.calendar-page__event-edit-buttons-wrap {
+   text-align: end;
 }
 
 .calendar-page__event-button {
@@ -21,6 +57,7 @@
    font-size: 0.8rem;
    line-height: 1.2rem;
    font-weight: 100;
+   margin-top: 0.3rem;
    
 }
 
@@ -31,7 +68,7 @@
    align-items: center;
 }
 
-.calendar-page__month-switches > button {
+.calendar-page__month-switches button {
    margin-bottom: 1rem;
    margin-left: 0.3rem;
 }
@@ -45,9 +82,9 @@
 
 }
 
-.calendar-page__members-list > li {
+.calendar-page__members-list li {
    line-height: 1rem;
    display: flex;
-   width: 27.15rem;
+   max-width: 27.15rem;
    justify-content: space-between;
 }

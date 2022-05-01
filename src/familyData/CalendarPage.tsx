@@ -143,7 +143,7 @@ export default function CalendarPage() {
       const q = query(users, where('email', '==', email)); 
          
       const userSnapshot = await getDocs(q);
-      if (!userSnapshot.docs.length) setInputNewMemberError('E-mail not found, try again pls');
+      if (!userSnapshot.docs.length) setInputNewMemberError('E-mail not found, try again please');
       else {
          setInputNewMemberError("Request succesfully sent");
          const newMemberRef = userSnapshot.docs[0].ref;

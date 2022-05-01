@@ -1,7 +1,13 @@
 interface DayData {
    day: null | number;
-   timetable: any[];          //toDo
+   timetable: Timetable[];          
    events: number;
+}
+
+interface Timetable {
+   timeStart: string
+   timeEnd: string 
+   title: string;
 }
 
 export function weekShift(date: Date): number {

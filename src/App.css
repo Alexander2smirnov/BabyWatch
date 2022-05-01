@@ -17,7 +17,7 @@
 
 }
 
-nav > a {
+nav a {
    color:white;
 }
 
@@ -61,15 +61,17 @@ nav > a {
    align-items: center;
    justify-content: space-between;
    height: 100%;
-   margin-left: 15vw;
-   margin-right: 15vw;
+   margin-left: 10vw;
+   margin-right: 10vw;
+   
    
 }
 
 .main-container {
-   margin-left: 15vw;
-   margin-right: 15vw;
+   margin-left: 10vw;
+   margin-right: 10vw;
    margin-top: 5.5rem;
+   max-width: 800px
    
 }
 
@@ -88,6 +90,9 @@ button {
    cursor: pointer;
    display: inline-block;
    vertical-align: top;
+   margin-top: 0.1rem;
+   margin-bottom: 0.1rem;
+  
 }
 
 button:hover{
@@ -97,12 +102,21 @@ button:hover{
 input {
    background-color: rgb(232, 242, 247);
    width: 20rem;
+   max-width: 20rem;
    border-radius: 5px;
    border-width: 0.5px;
    line-height: 1.5rem;
    margin-right: 0.1rem;
+   margin-top: 0.1rem;
+   margin-bottom: 0.1rem;
 }
 
+select {
+   margin-right: 0.1rem;
+   margin-top: 0.1rem;
+   margin-bottom: 0.1rem;
+
+}
 
 input:focus-visible {
    outline: 0;
