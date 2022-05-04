@@ -1,9 +1,7 @@
-import React, { FormEvent, useContext, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { FamilyMember } from "./interfaces";
-// import UserContext from "../userContext";
-
 
 interface FamilyMembersListProps {
    familyName: string;
@@ -12,21 +10,18 @@ interface FamilyMembersListProps {
    addNewFamilyMember: (email: string) => void
    removeFamilyMember: (familyMember: FamilyMember) => void;
    inputNewMemberError: string;
-
 }
 
-export default function FamilyMembersList(
-   {familyName, familyAdminId, familyMembers, addNewFamilyMember, removeFamilyMember, inputNewMemberError}: FamilyMembersListProps
-) {
-   // const user = useContext(UserContext);
+export default function FamilyMembersList
+   ({familyName, familyAdminId, familyMembers, addNewFamilyMember, removeFamilyMember, inputNewMemberError}: FamilyMembersListProps) 
+{
    const user = useSelector((state: RootState) => state.user);
    const [inputNewMember, setInputNewMember] = useState('');
    
-   function submitHandler (event: FormEvent) {
+   function submitHandler(event: FormEvent) {
       event.preventDefault();
       addNewFamilyMember(inputNewMember);
       setInputNewMember('');
-      
    }
    
    return <>

@@ -1,17 +1,16 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { DocData } from "../firebaseCustom";
+import { DocData, FamilyData } from "../firebaseCustom";
 import { RootState } from "../store/store";
 
-
 interface FamiliesListProps {
-   familiesUserIsIn: DocData[];
+   familiesUserIsIn: DocData<FamilyData>[];
    deleteFamily: (id: string) => void;
 }
 
 export default function FamiliesList({familiesUserIsIn, deleteFamily}: FamiliesListProps) {
-   const [tryDeleteFamily, setTryDeleteFamily] = useState<string>();
+   const [tryDeleteFamily, setTryDeleteFamily] = useState('');
    const user = useSelector((state: RootState) => state.user);
 
    return <div className="families-list">

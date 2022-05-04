@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import Nav from './Nav';
 import CalendarPage from './familyData/CalendarPage';
 import Welcome from './Welcome';
 import FamiliesPage from './famiesListPage/FamiliesPage'
-import { auth, users} from './firebaseCustom';
+import { auth, User, users} from './firebaseCustom';
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, setDoc } from 'firebase/firestore';
 import './App.css';
@@ -21,7 +21,8 @@ function App() {
          if (!usr) dispatch({type: 'logOut', payload: null});
          else {
             dispatch({type: 'logIn', payload: {id: usr.uid}});
-            setDoc(doc(users, usr.uid), {name: usr.displayName, email: usr.email});
+            const userInfo: User = {name: usr.displayName as string, email: usr.email as string};
+            setDoc(doc(users, usr.uid), userInfo);
          }
       });
       return () => {authState()};

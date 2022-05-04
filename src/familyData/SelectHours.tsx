@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 
 interface SelectHoursProps {
    initialValue: string;
@@ -10,7 +10,6 @@ export default function SelectHours ({initialValue, setFn}: SelectHoursProps) {
    for (let i = 0; i < 24; i++) {
       hoursArray[i] = ((i + 7)%24).toString();
    }   
-
    return <select 
       value={initialValue} 
       onChange={(event) => setFn(event.target.value)}

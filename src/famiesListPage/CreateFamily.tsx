@@ -1,4 +1,4 @@
-import React, { KeyboardEvent, useState } from "react";
+import { KeyboardEvent, useState } from "react";
 
 interface CreateFamilyProps {
    createFamily: (name: string) => void;
@@ -17,7 +17,7 @@ export default function CreateFamily({createFamily}: CreateFamilyProps) {
 
    function onSubmit() {
       if (!inputFamilyName.trim()) return;
-      
+   
       createFamily(inputFamilyName); 
       setInputFamilyName('');
       setCreatingFamily(false);
@@ -32,7 +32,6 @@ export default function CreateFamily({createFamily}: CreateFamilyProps) {
       </button>}
 
       {creatingFamily && 
-      <>
       <form
          onSubmit={(event) => {
             event.preventDefault();
@@ -50,7 +49,6 @@ export default function CreateFamily({createFamily}: CreateFamilyProps) {
          >
             Create family   
          </button>
-      </form>
-      </>}
+      </form>}
    </div>
 }

@@ -4,7 +4,6 @@
    flex-direction: column;
    justify-content: space-between;
    min-height: 100vh;
-   /* background-color: rgb(204, 228, 219); */
    background-color: #e5e9ed;
 }
 
@@ -23,7 +22,6 @@ nav a {
 
 .logout-button-wrap  button {
    color:white;
-   /* background-color: rgb(86, 211, 150); */
    border-color: grey;
    border-width: 0.5px;
    
@@ -32,7 +30,6 @@ nav a {
 .header {
    height: 4rem;
    width: 100%;
-   /* background-color: rgb(34, 132, 95, 0.8); */
    background-color: #949cb1af;
    position: fixed;
    color: white;
@@ -71,15 +68,13 @@ nav a {
    margin-left: 10vw;
    margin-right: 10vw;
    margin-top: 5.5rem;
-   max-width: 800px
+
    
 }
 
 button {
    color: white;
    background-color: #334269;
-   
-   /* background-color:rgb(41, 159, 114); */
    border-radius: 5px;
    border-width: 0.8px;
    font-size: 1rem;

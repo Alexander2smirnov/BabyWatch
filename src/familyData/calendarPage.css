@@ -2,6 +2,25 @@
    margin-top: 1.2rem;
    font-size: 1.2rem;
    line-height: 1.3rem;
+
+}
+.calendar-page {
+   display: flex;
+   justify-content: space-between;
+   flex-wrap: wrap;
+
+}
+.calendar-page__chat-wrap {
+   min-width: 22rem;
+   min-height: 40rem;
+   /* background-color: rgb(247, 247, 247); */
+
+}
+
+.calendar-page__container {
+   max-width: 800px;
+   flex-grow: 2;
+   margin-right: 3rem;
 }
 
 .calendar-page__members-list {

@@ -1,11 +1,8 @@
-import React, { Dispatch, KeyboardEvent, SetStateAction, useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import ChangeEvent from "./ChangeEvent";
 import { EventData } from "./interfaces";
-// import UserContext from "../userContext";
-import SelectHours from "./SelectHours";
-import SelectMinutes from "./SelectMinutes";
 
 interface CurrentDayEventsProps {
    data: EventData[];
@@ -15,10 +12,8 @@ interface CurrentDayEventsProps {
    unsignForEvent: (id: string) => void;
 }
 
-export default function CurrentDayEvents(
-   {data, deleteEvent, changeEvent, signForEvent, unsignForEvent}: CurrentDayEventsProps
-) {
-   // const user = useContext(UserContext);
+export default function CurrentDayEvents
+({data, deleteEvent, changeEvent, signForEvent, unsignForEvent}: CurrentDayEventsProps) {
    const user = useSelector((state: RootState) => state.user);
    
    const [eventToChange, setEventToChange] = useState<EventData | null>(null);
@@ -49,8 +44,6 @@ export default function CurrentDayEvents(
                {event !== eventToChange && 
                <>{event.title + ', ' + event.timeStart + ' - ' + event.timeEnd + ', by ' + event.creatorName} 
                {event.signedBy && <> signed by {event.signedByName}</>}</>}
-               
-               
             </div>
 
             {event.signedById === user?.id && 

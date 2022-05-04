@@ -1,16 +1,4 @@
-import { DocumentReference } from "firebase/firestore";
-
-export interface EventBdData {
-   familyId: string;
-   title: string;
-   timeStart: string;
-   timeEnd: string;
-   creator: DocumentReference | null;
-   signedBy: DocumentReference | null;
-   year: number;
-   month: string;
-   day: number;
-}
+import { EventBdData } from "../firebaseCustom";
 
 export type EventData = EventBdData & {
    id: string;
@@ -19,12 +7,6 @@ export type EventData = EventBdData & {
    signedByName: string | null;
    signedById: string | null;
 };
-
-export interface FamilyData {
-   name: string;
-   admin: DocumentReference; 
-   users: DocumentReference[];
-}
 
 export interface FamilyMember {
    name: string; 
@@ -37,3 +19,4 @@ export interface Day {
    month: string;
    day: number;
 }
+

@@ -1,10 +1,9 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import initialCalendar, { weekShift } from './initialCalender';
 import './Calendar.css'
-import { DocumentReference } from 'firebase/firestore';
 import { EventData } from './interfaces';
 
-interface CalendarDraw {
+interface CalendarDrawProps {
    data: EventData[];
    clickHandler: (year: number, month: string, day: number) => void;
    shiftDate: Date;
@@ -13,11 +12,10 @@ interface CalendarDraw {
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-export default function CalendarDraw({data, clickHandler, shiftDate, showDay}: CalendarDraw) {
+export default function CalendarDraw({data, clickHandler, shiftDate, showDay}: CalendarDrawProps) {
    const date = shiftDate;
    const month = months[date.getMonth()];
    const year = date.getFullYear();
-   
    const shift = weekShift(date);
 
    const calendar = useMemo(()=> {
@@ -38,7 +36,7 @@ export default function CalendarDraw({data, clickHandler, shiftDate, showDay}: C
          }
       }
       return newCalendar;
-     
+
    }, [data, shiftDate]);
 
    function getWeek (num: number) {
@@ -74,7 +72,7 @@ export default function CalendarDraw({data, clickHandler, shiftDate, showDay}: C
                         calendar-cell-has-events-${!!calendar[w][d].events}
                         calendar-selected-${ifShowDay(w,d)}
                         calendar-cell-filled-${!!calendar[w][d].day}`} 
-                     key={w + ' ' + d}
+                     key={d}
                      onClick={() => {
                         if (calendar[w][d].day) clickHandler(year, month, getDay(w, d));
                      }}

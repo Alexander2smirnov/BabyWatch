@@ -1,9 +1,7 @@
-import React from 'react';
 import {useParams, useNavigate} from 'react-router-dom'
-import {useEffect , useState, useContext} from 'react';
+import {useEffect , useState} from 'react';
 import {addDoc, getDocs, where, query, deleteDoc, doc, getDoc, updateDoc, arrayUnion, setDoc, arrayRemove, DocumentReference} from "firebase/firestore";
-import {events, families, users } from '../firebaseCustom';
-// import UserContext from '../userContext';
+import {EventBdData, events, families, FamilyData, User, users } from '../firebaseCustom';
 import CalendarDraw from './CalendarDraw';
 import FamilyMembersList from './FamilyMembersList';
 import DayBreakdown from './DayBreakdown';
@@ -11,20 +9,14 @@ import './Calendar.css'
 import './calendarPage.css'
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
-import { Day, EventBdData, EventData, FamilyData, FamilyMember } from './interfaces';
+import { Day, EventData, FamilyMember } from './interfaces';
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-interface User {
-   name: string;
-   email: string;
-}
 
 export default function CalendarPage() {
    const params = useParams();
    const navigate = useNavigate();
 
-   // const user = useContext(UserContext);
    const user = useSelector((state: RootState) => state.user);
 
    const [familyMembers, setFamilyMembers] = useState<FamilyMember[]>([]);
@@ -174,45 +166,53 @@ export default function CalendarPage() {
    }
  
    return <div className='calendar-page'>
-      <FamilyMembersList 
-         familyName={familyName}
-         familyAdminId={familyAdminId}
-         familyMembers={familyMembers}
-         addNewFamilyMember={addNewFamilyMember}
-         removeFamilyMember={removeFamilyMember}
-         inputNewMemberError={inputNewMemberError}
-      />
-      <div className='calendar-layout'>
-         <h1> {year} {month} </h1>
-         <div className='calendar-page__month-switches'>
-            <button
-               onClick={() => monthChange (-1)}
-            >
-               {'<< '}Prev
-            </button>
-            <button
-               onClick={() => monthChange (1)}
-            >
-               Next{' >>'}
-            </button>
-         </div>   
-         <CalendarDraw
-            data={data}
-            clickHandler={cellClickHandler}
-            shiftDate={date}
-            showDay={showDay?.day || null}
+      <div 
+         className='calendar-page__container'
+      >
+         <FamilyMembersList 
+            familyName={familyName}
+            familyAdminId={familyAdminId}
+            familyMembers={familyMembers}
+            addNewFamilyMember={addNewFamilyMember}
+            removeFamilyMember={removeFamilyMember}
+            inputNewMemberError={inputNewMemberError}
          />
+         <div className='calendar-layout'>
+            <h1> {year} {month} </h1>
+            <div className='calendar-page__month-switches'>
+               <button
+                  onClick={() => monthChange (-1)}
+               >
+                  {'<< '}Prev
+               </button>
+               <button
+                  onClick={() => monthChange (1)}
+               >
+                  Next{' >>'}
+               </button>
+            </div>   
+            <CalendarDraw
+               data={data}
+               clickHandler={cellClickHandler}
+               shiftDate={date}
+               showDay={showDay?.day || null}
+            />
+         </div>
+         {showDay ? <DayBreakdown 
+            data={data}
+            day={showDay.day}
+            month={month}
+            year={year}
+            addEvent={addEvent}
+            deleteEvent={deleteEvent}
+            changeEvent={changeEvent}
+            signForEvent={signForEvent}
+            unsignForEvent={unsignForEvent}
+         /> : null}
       </div>
-      {showDay ? <DayBreakdown 
-         data={data}
-         day={showDay.day}
-         month={month}
-         year={year}
-         addEvent={addEvent}
-         deleteEvent={deleteEvent}
-         changeEvent={changeEvent}
-         signForEvent={signForEvent}
-         unsignForEvent={unsignForEvent}
-      /> : null}
+      <div
+         className='calendar-page__chat-wrap'>
+
+      </div>
    </div>  
 }

@@ -8,9 +8,6 @@ td {
    text-align: end;
    padding-right: 0.4rem;
    font-weight: 500;
-      
-   
-
 }
 
 table {
@@ -18,7 +15,6 @@ table {
 
 }
 .calendar-cell-filled-true {
-   /* background-color: rgb(86, 211, 150); */
    background-color: #cdccc9;
 
 }
@@ -27,7 +23,6 @@ table {
 }
 
 .calendar-cell-has-events-true {
-   /* background-color: rgb(64, 114, 90); */
    background-color: #50689f;
    color: white;
 }

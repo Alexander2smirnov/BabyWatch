@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState }  from 'react';
+import React, { useMemo }  from 'react';
 import CreateNewEvent from './CreateNewEvent';
 import CurrentDayEvents from './CurrentDayEvents';
 // import UserContext from '../userContext';
@@ -18,15 +18,11 @@ interface DayBreakdownProps {
    unsignForEvent: (id: string) => void;
 }
 
-
-export default function DayBreakdown(
-   {data, year, month, day, addEvent, deleteEvent, changeEvent, signForEvent, unsignForEvent}: DayBreakdownProps
-) {
-   // const user = useContext(UserContext);
-   const user = useSelector((state: RootState) => state.user);
-
+export default function DayBreakdown
+   ({data, year, month, day, addEvent, deleteEvent, changeEvent, signForEvent, unsignForEvent}: DayBreakdownProps)
+{
    const currentDayData = useMemo(() => {
-      return data.filter(obj => obj.month === month && obj.day === day && obj.year == year)
+      return data.filter(obj => obj.month === month && obj.day === day && obj.year === year)
    }, [data, year, month, day]);
    
    return <div>

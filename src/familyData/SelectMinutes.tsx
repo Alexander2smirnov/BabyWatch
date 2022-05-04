@@ -6,7 +6,6 @@ interface SelectMinutesProps {
 }
 
 export default function SelectMinutes({initialValue, setFn}: SelectMinutesProps) {
-
    return <select 
       value={initialValue} 
       onChange={(event) => setFn(event.target.value)}
@@ -18,5 +17,4 @@ export default function SelectMinutes({initialValue, setFn}: SelectMinutesProps)
       <option value='40'>40</option>
       <option value='50'>50</option>
    </select>     
-
 }

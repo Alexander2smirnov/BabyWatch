@@ -1,4 +1,4 @@
-import React, { Dispatch, KeyboardEvent, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, KeyboardEvent, SetStateAction, useEffect, useState } from "react";
 import SelectMinutes from "./SelectMinutes";
 import SelectHours from "./SelectHours";
 

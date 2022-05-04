@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { DocumentReference, getFirestore } from "firebase/firestore";
 import { collection } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -23,4 +23,28 @@ export const users = collection(db, 'users');
 export interface DocData<T = any> {
    id: string;
    data: T;
+}
+
+export interface User {
+   name: string;
+   email: string;
+}
+
+export interface FamilyData {
+   name: string;
+   admin: DocumentReference; 
+   users: DocumentReference[];
+   invited: DocumentReference[];
+}
+
+export interface EventBdData {
+   familyId: string;
+   title: string;
+   timeStart: string;
+   timeEnd: string;
+   creator: DocumentReference | null;
+   signedBy: DocumentReference | null;
+   year: number;
+   month: string;
+   day: number;
 }

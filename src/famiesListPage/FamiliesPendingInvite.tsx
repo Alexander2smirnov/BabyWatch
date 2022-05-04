@@ -1,15 +1,14 @@
-import React from "react";
-import { DocData } from "../firebaseCustom";
+import { DocData, FamilyData } from "../firebaseCustom";
 
 interface FamiliesPending {
-   familierUserInvitedTo: DocData[];
+   familiesUserInvitedTo: DocData<FamilyData>[];
    inviteReaction: (id: string, answer: boolean) => void;
 }
 
-export default function FamiliesPendingInvite({familierUserInvitedTo, inviteReaction}: FamiliesPending) {
+export default function FamiliesPendingInvite({familiesUserInvitedTo, inviteReaction}: FamiliesPending) {
    return <div>
       <ul>
-         {familierUserInvitedTo.map(family => 
+         {familiesUserInvitedTo.map(family => 
          <li key={family.id}>
             <div className="families-list__families">
                {family.data.name}

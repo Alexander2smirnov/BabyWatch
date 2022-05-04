@@ -1,19 +1,21 @@
-import { addDoc, arrayRemove, arrayUnion, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
-import React, { useContext, useEffect, useState } from "react";
-import { DocData, families, users } from '../firebaseCustom';
+import { addDoc, arrayRemove, arrayUnion, deleteDoc, doc, DocumentReference, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { DocData, families, FamilyData, users } from '../firebaseCustom';
 import CreateFamily from "./CreateFamily";
 import FamiliesList from "./FamiliesList";
 import FamiliesPendingInvite from "./FamiliesPendingInvite";
 import './families.css';
-import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store/store";
+
 
 export default function FamiliesPage() {
    const user = useSelector((state: RootState) => state.user);
-
-   const [familiesUserIsIn, setFamiliesUserIsIn] = useState<DocData[]>([]);
-   const [familierUserInvitedTo, setFamilierUserInvitedTo] = useState<DocData[]>([]);
+   const dispatch: AppDispatch = useDispatch();
    
+   const [familiesUserIsIn, setFamiliesUserIsIn] = useState<DocData<FamilyData>[]>([]);
+   const [familiesUserInvitedTo, setFamiliesUserInvitedTo] = useState<DocData<FamilyData>[]>([]);
+
    useEffect(() => {
       getFamilies();
       getInvites();   
@@ -22,22 +24,33 @@ export default function FamiliesPage() {
    async function getFamilies() {
       if (user) {
          const q = query(families, where('users', 'array-contains', doc(users, user.id)));
+         try {
          const querySnapshot = await getDocs(q);
+         const familiesRefs: DocumentReference[] = [];
          
          setFamiliesUserIsIn(querySnapshot.docs.map(doc => {
-            return {id: doc.id, data: doc.data()}
+            familiesRefs.push(doc.ref);
+            return {id: doc.id, data: doc.data() as FamilyData}
          }));  
+         dispatch({type: 'setFamilies', payload: familiesRefs});
+         } catch (e) {
+            console.log('Error getting families list');
+         }
       }           
    }
 
    async function getInvites() {
       if (user) {
-         const q = query(families, where('invited', 'array-contains', doc(users, user.id)));
-         const querySnapshot = await getDocs(q);
-         
-         setFamilierUserInvitedTo(querySnapshot.docs.map(doc => {
-            return {id: doc.id, data: doc.data()}
-         }));
+         try {
+            const q = query(families, where('invited', 'array-contains', doc(users, user.id)));
+            const querySnapshot = await getDocs(q);
+            
+            setFamiliesUserInvitedTo(querySnapshot.docs.map(doc => {
+               return {id: doc.id, data: doc.data() as FamilyData}
+            }));
+         } catch (e) {
+            console.log('Error getting invites');
+         }
       }
    }
 
@@ -89,10 +102,10 @@ export default function FamiliesPage() {
          deleteFamily={deleteFamily}
       />
 
-      {!!familierUserInvitedTo.length && 
+      {!!familiesUserInvitedTo.length && 
       <h2>You are invited:</h2>}
       <FamiliesPendingInvite 
-         familierUserInvitedTo={familierUserInvitedTo}
+         familiesUserInvitedTo={familiesUserInvitedTo}
          inviteReaction={inviteReaction}
       />
       
